@@ -3,7 +3,7 @@ package com.safetynet.api.alerts.model;
 import java.util.Date;
 import java.util.List;
 
-public class MedicalRecords {
+public class MedicalRecord {
 	String firstName;
 	String lastName;
 	Date birthDate;
