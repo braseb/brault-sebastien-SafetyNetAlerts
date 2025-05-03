@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class Person {
 	String firstName;
 	String lastName;
-	String adress;
+	String address;
 	String city;
 	String zip;
 	String phone;
@@ -24,11 +24,11 @@ public class Person {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public String getAdress() {
-		return adress;
+	public String getAddress() {
+		return address;
 	}
-	public void setAdress(String adress) {
-		this.adress = adress;
+	public void setAdress(String address) {
+		this.address = address;
 	}
 	public String getCity() {
 		return city;

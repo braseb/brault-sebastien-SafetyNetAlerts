@@ -1,5 +1,8 @@
 package com.safetynet.api.alerts.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class FireStation {
 	String address;
 	Integer station;

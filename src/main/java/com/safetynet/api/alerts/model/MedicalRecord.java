@@ -1,13 +1,18 @@
 package com.safetynet.api.alerts.model;
 
-import java.util.Date;
+
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class MedicalRecord {
 	String firstName;
 	String lastName;
-	Date birthDate;
+	String birthdate;
 	List<String> medications;
+	List<String> allergies;
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -20,11 +25,11 @@ public class MedicalRecord {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public Date getBirthDate() {
-		return birthDate;
+	public String getBirthdate() {
+		return birthdate;
 	}
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
 	}
 	public List<String> getMedications() {
 		return medications;
@@ -32,5 +37,12 @@ public class MedicalRecord {
 	public void setMedications(List<String> medications) {
 		this.medications = medications;
 	}
+	public List<String> getAllergies() {
+		return allergies;
+	}
+	public void setAllergies(List<String> allergies) {
+		this.allergies = allergies;
+	}
+	
 	
 }
