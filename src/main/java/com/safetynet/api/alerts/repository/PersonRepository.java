@@ -58,7 +58,9 @@ public class PersonRepository {
 		
 		
 		return personsSelect;
-}
+	}
+	
+	
 	
 	public List<Person> getAllPerson(){
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
