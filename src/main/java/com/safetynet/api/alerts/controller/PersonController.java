@@ -47,14 +47,6 @@ public class PersonController {
 		return new ResponseEntity<String> ("Bien créer", HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/childAlert")
-	public List<PersonMedicalRecord> getChildAlert(@RequestParam("address") final String address){
-		try {
-			return personMedicalRecordService.getChildAlert(address);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Collections.emptyList();
-		}
-	}
+	
 
 }
