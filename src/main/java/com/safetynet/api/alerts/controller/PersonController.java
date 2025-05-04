@@ -15,22 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.api.alerts.model.Person;
-import com.safetynet.api.alerts.model.PersonMedicalRecord;
-
-import com.safetynet.api.alerts.service.PersonMedicalRecordService;
 import com.safetynet.api.alerts.service.PersonService;
 
 @RestController
 public class PersonController {
 
-    private final PersonMedicalRecordService personMedicalRecordService;
-	
+    	
 	@Autowired
 	private PersonService personService;
-
-    PersonController(PersonMedicalRecordService personMedicalRecordService) {
-        this.personMedicalRecordService = personMedicalRecordService;
-    }
+    
 	
 	@GetMapping("/persons")
 	public List<Person> getPersons(){
