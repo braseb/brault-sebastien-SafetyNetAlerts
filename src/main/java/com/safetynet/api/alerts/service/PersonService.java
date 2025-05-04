@@ -15,9 +15,13 @@ public class PersonService {
 	@Autowired
 	private PersonRepository personRepository;
 	
-	public List<Person> getPersonByName(String lastName, String firstName) throws Exception{
+	public List<Person> getPersonByName(String lastName, String firstName){
 		
 		return personRepository.getPersonByName(lastName, firstName);
 		
+	}
+	
+	public List<Person> getPersonByAddress(String address){
+		return personRepository.getPersonByAddress(address);
 	}
 }
