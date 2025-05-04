@@ -25,12 +25,10 @@ public class PersonMedicalRecordService {
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
 	
-	public List<PersonMedicalRecord> getChildAlert(String address) throws Exception{
+	public List<PersonMedicalRecord> getPersonMedicalRecord(String address) throws Exception{
 		List<Person> listPerson = personRepository.getPersonByAddress(address);
 		List<MedicalRecord> listMedicalRecord = medicalRecordRepository.getAllMedicalRecord();
-		System.out.println(address);
-		
-				
+						
 		List<PersonMedicalRecord> listPersonMedicalRecord = listPerson.stream()
 																		.map(p -> {MedicalRecord med =  listMedicalRecord.stream()
 																					.filter(m -> m.getFirstName().equals(p.getFirstName()) && m.getLastName().equals(p.getLastName()))
@@ -40,17 +38,16 @@ public class PersonMedicalRecordService {
 																					})
 																		.collect(Collectors.toList());
 		
-		System.out.println(listPersonMedicalRecord);
-		System.out.println(listPersonMedicalRecord.get(0).getMedicalRecord().getBirthdate());
+		
 		List<PersonMedicalRecord> listChildAlert = listPersonMedicalRecord.stream()
 																			.filter(p -> Period.between(LocalDate.parse(
 																						p.getMedicalRecord().getBirthdate(),
-																						DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.FRANCE))
+																						DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.US))
 																					,LocalDate.now()).getYears() < 18)
 																			.collect(Collectors.toList());
 																			
 																	
-		System.out.println(listChildAlert );
+		
 		return listChildAlert;
 		
 	}
