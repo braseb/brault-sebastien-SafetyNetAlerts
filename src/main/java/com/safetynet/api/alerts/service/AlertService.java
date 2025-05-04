@@ -85,11 +85,7 @@ public class AlertService {
 		fireStationDto.setPersons(personsDto);
 		fireStationDto.setNumberChild(part.get(true).size());
 		fireStationDto.setNumberAdult(part.get(false).size());
-			
-			
-			
-		
-		
+				
 		return fireStationDto;
 		
 	}
