@@ -1,9 +1,5 @@
 package com.safetynet.api.alerts.repository;
 
-
-
-
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +24,7 @@ public class PersonRepository {
 		
 	}
 	
-	public List<Person> getPersonByName(String lastName, String firstName) throws IOException {
+	public List<Person> getPersonByName(String lastName, String firstName)  {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		
 		List<Person> personsSelect = Collections.emptyList();
@@ -46,7 +42,7 @@ public class PersonRepository {
 		return personsSelect;
 	}
 		
-	public List<Person> getPersonByAddress(String address) throws IOException {
+	public List<Person> getPersonByAddress(String address)  {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		List<Person> personsSelect = Collections.emptyList();
 		
@@ -64,7 +60,7 @@ public class PersonRepository {
 		return personsSelect;
 }
 	
-	public List<Person> getAllPerson() throws IOException {
+	public List<Person> getAllPerson(){
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		List<Person> persons = Collections.emptyList();
 		

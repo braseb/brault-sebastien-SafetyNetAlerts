@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,13 +25,11 @@ public class MedicalRecordRepository {
 	private JsonDatas datas;
 	
 	public MedicalRecordRepository() {
-		//gson = new Gson();
-		//JsonReader reader = new JsonReader(new FileReader(fileJsonPath));
-		//fileCache = JsonParser.parseReader(reader).getAsJsonObject();
+		
 	}
 	
 	
-	public List<MedicalRecord> getAllMedicalRecord() throws IOException {
+	public List<MedicalRecord> getAllMedicalRecord() {
 		JsonArray medicalRecordsArray = datas.getFileCache().getAsJsonArray("medicalrecords");
 		List<MedicalRecord> medicalRecords = Collections.emptyList();
 		if (medicalRecordsArray != null) {
@@ -40,5 +40,23 @@ public class MedicalRecordRepository {
 		
 				
 		return medicalRecords;
+	}
+	
+	public Optional<MedicalRecord> getMedicalRecordByName(String lastName, String firstName)  {
+		JsonArray medicalRecordsArray = datas.getFileCache().getAsJsonArray("medicalrecords");
+		Optional<MedicalRecord> medicalRecordsSelect = null;
+		if (medicalRecordsArray != null) {
+			Gson gson = new Gson();
+			Type typeListMedicalRecord = new TypeToken<List<MedicalRecord>>() {}.getType();
+			List<MedicalRecord> listMedicalRecord = gson.fromJson(medicalRecordsArray, typeListMedicalRecord);
+			
+			medicalRecordsSelect = listMedicalRecord.stream()
+														.filter(m -> m.getLastName().equals(lastName) && m.getFirstName().equals(firstName))
+														.findFirst();
+			
+		}
+		
+				
+		return medicalRecordsSelect;
 	}
 }
