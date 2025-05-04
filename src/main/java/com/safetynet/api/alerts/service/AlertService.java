@@ -90,5 +90,21 @@ public class AlertService {
 		
 	}
 	
+	public List<String> getPhoneAlert(int fireStation){
+		List<String> addressfireStation = fireStationService.getAddressByStationNumber(fireStation);
+		List<String> phones = new ArrayList<String>();
+		for (String address : addressfireStation) {
+			List<Person> persons = personService.getPersonByAddress(address);
+			List<String> phonesAddress = persons.stream()
+												.map(Person::getPhone)
+												.distinct()
+												.toList();
+			phones.addAll(phonesAddress);
+		}
+		
+		return phones;
+		
+	}
+	
 	
 }

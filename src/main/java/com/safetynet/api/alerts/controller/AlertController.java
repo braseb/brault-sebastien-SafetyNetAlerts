@@ -1,6 +1,6 @@
 package com.safetynet.api.alerts.controller;
 
-import java.util.Collections;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.api.alerts.model.PersonMedicalRecord;
 import com.safetynet.api.alerts.model.dto.ChildAlertDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.service.AlertService;
@@ -30,4 +29,10 @@ public class AlertController {
 	public FirestationDto getPersonCoveredByFireStation(@RequestParam("stationNumber") final int stationNumber){
 		return alertService.getPersonCoveredByFireStation(stationNumber);
 	}
+	
+	@GetMapping("/phoneAlert")
+	public List<String> getPhoneAlert(@RequestParam int firestation) {
+		return alertService.getPhoneAlert(firestation);
+	}
+	
 }
