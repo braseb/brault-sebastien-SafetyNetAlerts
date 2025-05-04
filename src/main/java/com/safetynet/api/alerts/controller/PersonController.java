@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.safetynet.api.alerts.model.Person;
 import com.safetynet.api.alerts.service.PersonService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 public class PersonController {
 
@@ -36,6 +38,7 @@ public class PersonController {
 	}
 	
 	@PostMapping("/persons")
+	@Operation(summary = "Créer une nouvelle personne")
 	public ResponseEntity<String> createPerson(@RequestBody Person person) {
 		return new ResponseEntity<String> ("Bien créer", HttpStatus.CREATED);
 	}

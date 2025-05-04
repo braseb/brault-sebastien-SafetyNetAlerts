@@ -3,6 +3,7 @@ package com.safetynet.api.alerts.service;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +25,6 @@ public class PersonService {
 	public List<Person> getPersonByAddress(String address){
 		return personRepository.getPersonByAddress(address);
 	}
+	
+	
 }
