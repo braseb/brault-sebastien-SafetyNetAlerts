@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import com.safetynet.api.alerts.model.dto.PersonDto;
 @Service
 public class AlertService {
 
+	
+	private static final Logger log  = LogManager.getLogger();
     private final FireStationService fireStationService;
 	
 	@Autowired
@@ -34,6 +38,7 @@ public class AlertService {
 		List<Person> persons = personService.getPersonByAddress(address);
 		List<ChildAlertDto> listChilAlert = new ArrayList<ChildAlertDto>();
 		System.out.println(persons);
+		log.info("list of person : {}", persons);
 				
 		for (Person person : persons) {
 			List<MemberHousehold> members = new ArrayList<MemberHousehold>();
