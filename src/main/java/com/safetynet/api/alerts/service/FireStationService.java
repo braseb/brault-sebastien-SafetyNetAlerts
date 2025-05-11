@@ -26,6 +26,18 @@ public class FireStationService {
 		return address;
 	}
 	
+	public List<String> getAddressByListOfStationNumber(List<Integer> stationNumbers) {
+		List<FireStation> listFireStation = fireStationRepository.getStationByListOfStationNumber(stationNumbers);
+				
+		List<String> address  = listFireStation.stream()
+												.map(f -> f.getAddress())
+												.distinct()
+												.collect(Collectors.toList());
+												
+				
+		return address;
+	}
+	
 	public int getStationNumberByAddress(String address) {
 		List<FireStation> listFireStation = fireStationRepository.getStationNumberByAddress(address);
 		System.out.println(listFireStation);

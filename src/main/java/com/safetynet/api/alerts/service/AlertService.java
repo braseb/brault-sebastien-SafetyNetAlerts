@@ -16,6 +16,7 @@ import com.safetynet.api.alerts.model.Person;
 import com.safetynet.api.alerts.model.dto.ChildAlertDto;
 import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
+import com.safetynet.api.alerts.model.dto.HouseholdDto;
 import com.safetynet.api.alerts.model.dto.MemberHousehold;
 import com.safetynet.api.alerts.model.dto.PersonDto;
 import com.safetynet.api.alerts.model.dto.PersonFullInfoDto;
@@ -24,17 +25,18 @@ import com.safetynet.api.alerts.model.dto.PersonFullInfoDto;
 @Service
 public class AlertService {
 
-	
-	private static final Logger log  = LogManager.getLogger();
+    private static final Logger log  = LogManager.getLogger();
     private final FireStationService fireStationService;
+    
 	
 	@Autowired
 	private PersonService personService;
 	@Autowired
 	private MedicalRecordService medicalRecordService;
 
-    AlertService(FireStationService fireStationService) {
+    AlertService(FireStationService fireStationService, MedicalRecordService medicalRecordService) {
         this.fireStationService = fireStationService;
+        this.medicalRecordService = medicalRecordService;
     }
 	
 	public List<ChildAlertDto> getChildrenByAdress(String address){
@@ -133,6 +135,29 @@ public class AlertService {
 		fireDto.setStationNumber(stationNumber);
 		return fireDto;
 		
+	}
+	
+	public HouseholdDto getHouseholdsByStationNumbers(List<Integer> stationNumbers){
+		List<String> address = fireStationService.getAddressByListOfStationNumber(stationNumbers);
+		HouseholdDto household = new HouseholdDto();
+				
+		address.stream()
+				.forEach(a -> {List<Person> persons = personService.getPersonByAddress(a);
+								persons.stream()
+								.forEach(p -> {PersonFullInfoDto personFull = new PersonFullInfoDto();
+												MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(p.getLastName(), p.getFirstName());
+												personFull.setLastName(p.getLastName());
+												personFull.setFirstName(p.getFirstName());
+												personFull.setPhone(p.getPhone());
+												personFull.setMedications(medicalRecord.getMedications());
+												personFull.setAllergies(medicalRecord.getAllergies());
+												personFull.setAge(medicalRecordService.getAge(medicalRecord));
+												household.addPerson(a, personFull);
+												});
+								});
+		
+		return household;
+							
 	}
 	
 	

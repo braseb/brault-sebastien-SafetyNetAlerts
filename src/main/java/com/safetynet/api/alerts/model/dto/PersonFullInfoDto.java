@@ -5,10 +5,11 @@ import java.util.List;
 public class PersonFullInfoDto {
 	String lastName;
 	String firstName;
-	String phone;
-	int age;
 	List<String> medications;
 	List<String> allergies;
+	String phone;
+	int age;
+	
 	
 	public String getLastName() {
 		return lastName;
