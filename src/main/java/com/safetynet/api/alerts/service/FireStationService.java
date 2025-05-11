@@ -1,6 +1,7 @@
 package com.safetynet.api.alerts.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,15 @@ public class FireStationService {
 												.collect(Collectors.toList());
 				
 		return address;
+	}
+	
+	public int getStationNumberByAddress(String address) {
+		List<FireStation> listFireStation = fireStationRepository.getStationNumberByAddress(address);
+		System.out.println(listFireStation);
+		Optional<Integer> stationNumber  = listFireStation.stream()
+												.map(f -> f.getStation())
+												.findFirst();
+			
+		return stationNumber.orElse(-1);
 	}
 }

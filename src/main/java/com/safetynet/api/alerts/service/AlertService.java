@@ -11,11 +11,14 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.api.alerts.model.MedicalRecord;
 import com.safetynet.api.alerts.model.Person;
 import com.safetynet.api.alerts.model.dto.ChildAlertDto;
+import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.model.dto.MemberHousehold;
 import com.safetynet.api.alerts.model.dto.PersonDto;
+import com.safetynet.api.alerts.model.dto.PersonFullInfoDto;
 
 
 @Service
@@ -37,14 +40,12 @@ public class AlertService {
 	public List<ChildAlertDto> getChildrenByAdress(String address){
 		List<Person> persons = personService.getPersonByAddress(address);
 		List<ChildAlertDto> listChilAlert = new ArrayList<ChildAlertDto>();
-		System.out.println(persons);
 		log.info("list of person : {}", persons);
 				
 		for (Person person : persons) {
 			List<MemberHousehold> members = new ArrayList<MemberHousehold>();
 						
 			int age = medicalRecordService.getAge(person.getLastName(), person.getFirstName());
-			System.out.println(age);
 			if (age <= 18 && age > -1) {
 				ChildAlertDto childDto = new ChildAlertDto(person.getLastName(), person.getFirstName(), age, members);
 				
@@ -108,6 +109,29 @@ public class AlertService {
 		}
 		
 		return phones;
+		
+	}
+	
+	public FireDto getFirestationNumberAndPersonsByAddress(String address) {
+		List<Person> persons = personService.getPersonByAddress(address);
+		int stationNumber = fireStationService.getStationNumberByAddress(address);
+		FireDto fireDto = new FireDto();
+				
+		List<PersonFullInfoDto> listPersonFullInfoDto = persons.stream()
+						.map(p -> {MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(p.getLastName(), p.getFirstName());
+									PersonFullInfoDto personFullInfoDto = new PersonFullInfoDto();
+									personFullInfoDto.setLastName(p.getLastName());
+									personFullInfoDto.setFirstName(p.getFirstName());
+									personFullInfoDto.setPhone(p.getPhone());
+									personFullInfoDto.setMedications(medicalRecord.getMedications());
+									personFullInfoDto.setAllergies(medicalRecord.getAllergies());
+									personFullInfoDto.setAge(medicalRecordService.getAge(medicalRecord));
+									return personFullInfoDto;})
+						
+						.collect(Collectors.toList());
+		fireDto.setPersonFullInfo(listPersonFullInfoDto);
+		fireDto.setStationNumber(stationNumber);
+		return fireDto;
 		
 	}
 	

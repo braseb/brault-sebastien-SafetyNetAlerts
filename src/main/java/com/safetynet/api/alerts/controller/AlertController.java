@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.api.alerts.model.dto.ChildAlertDto;
+import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.service.AlertService;
 
@@ -32,6 +33,11 @@ public class AlertController {
 	@GetMapping("/phoneAlert")
 	public List<String> getPhoneAlert(@RequestParam int firestation) {
 		return alertService.getPhoneAlert(firestation);
+	}
+	
+	@GetMapping("/fire")
+	public FireDto getCasernNumberAndPersonsByAddress(@RequestParam String address){
+		return alertService.getFirestationNumberAndPersonsByAddress(address);
 	}
 	
 }

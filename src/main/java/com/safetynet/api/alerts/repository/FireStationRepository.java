@@ -38,6 +38,23 @@ public class FireStationRepository {
 				
 		return firestationSelect;
 	}
-	
 
+	public List<FireStation> getStationNumberByAddress(String address) {
+		List<FireStation> firestationSelect = Collections.emptyList();
+		JsonArray firestationArray = datas.getFileCache().getAsJsonArray("firestations");
+		if (firestationArray != null) {
+					
+			Gson gson = new Gson();
+			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
+			List<FireStation> fireStations = gson.fromJson(firestationArray, typeListFirestation);
+			
+			firestationSelect = fireStations.stream()
+											.filter(f -> f.getAddress().equals(address))
+											.toList();
+		
+		}
+	
+		return firestationSelect;
+	}
+		
 }
