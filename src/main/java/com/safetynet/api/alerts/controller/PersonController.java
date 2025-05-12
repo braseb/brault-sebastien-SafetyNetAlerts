@@ -40,7 +40,13 @@ public class PersonController {
 	@PostMapping("/persons")
 	@Operation(summary = "Créer une nouvelle personne")
 	public ResponseEntity<String> createPerson(@RequestBody Person person) {
-		return new ResponseEntity<String> ("Bien créer", HttpStatus.CREATED);
+		boolean created = personService.createPerson(person);
+		if (created) {
+			return new ResponseEntity<String> ("Bien créer", HttpStatus.CREATED);
+		}
+		
+		return new ResponseEntity<String> ("Non créer", HttpStatus.BAD_REQUEST);
+		
 	}
 	
 	

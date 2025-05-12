@@ -25,6 +25,11 @@ public class PersonService {
 	public List<Person> getPersonByAddress(String address){
 		return personRepository.getPersonByAddress(address);
 	}
+
+	public boolean createPerson(Person person) {
+		
+		return personRepository.createPerson(person);
+	}
 	
 	
 }

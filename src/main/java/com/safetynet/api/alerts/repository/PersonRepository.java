@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
 import com.safetynet.api.alerts.model.Person;
@@ -73,6 +74,26 @@ public class PersonRepository {
 		}
 				
 		return persons;
+	}
+
+	public boolean createPerson(Person person) {
+		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
+		boolean ret = false;
+		
+		if (personArray != null){
+			Gson gson = new Gson();
+			//Type personsListType = new TypeToken<List<Person>>() {}.getType();
+			//List<Person> persons  = gson.fromJson(personArray, personsListType);
+			
+			JsonElement personJson = gson.toJsonTree(person);
+			personArray.add(personJson);
+			datas.getFileCache().add("persons", personArray);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
 	}
 	
 	
