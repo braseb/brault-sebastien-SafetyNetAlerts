@@ -181,5 +181,16 @@ public class AlertService {
 		return personMedicalRecordWithEmailDtos;
 	}
 	
+	public List<String> getAllEmailByCity(String city){
+		List<Person> persons =  personService.getPersonByCity(city);
+		List<String> emails = persons.stream()
+									.map(Person::getEmail)
+									.distinct()
+									.sorted()
+									.toList();
+		
+		return emails;
+	}
+	
 	
 }

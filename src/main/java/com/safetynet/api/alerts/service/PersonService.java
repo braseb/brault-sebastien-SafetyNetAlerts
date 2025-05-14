@@ -31,6 +31,10 @@ public List<Person> getPersonByLastName(String lastName){
 	public List<Person> getPersonByAddress(String address){
 		return personRepository.getPersonByAddress(address);
 	}
+	
+	public List<Person> getPersonByCity(String city){
+		return personRepository.getPersonByCity(city);
+	}
 
 	public boolean createPerson(Person person) {
 		

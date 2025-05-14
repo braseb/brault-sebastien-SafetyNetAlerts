@@ -113,6 +113,22 @@ public class PersonRepository {
 		
 		return personsSelect;
 	}
+
+	public List<Person> getPersonByCity(String city) {
+		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
+		List<Person> personsSelect = new ArrayList<Person>();
+		
+		if (personArray != null){
+			Gson gson = new Gson();
+			Type personsListType = new TypeToken<List<Person>>() {}.getType();
+			List<Person> persons = gson.fromJson(personArray, personsListType);
+			personsSelect =	persons.stream()
+									.filter(p-> p.getCity().equals(city))
+									.collect(Collectors.toList());
+		}
+		
+		return personsSelect;
+	}
 	
 	
 }

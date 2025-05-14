@@ -49,8 +49,15 @@ public class AlertController {
 	
 	
 	@GetMapping("/personInfo")
-	public List<PersonMedicalRecordWithEmailDto> getHousehold(@RequestParam String  lastName) {
+	public List<PersonMedicalRecordWithEmailDto> getPersoninfo(@RequestParam String  lastName) {
 		return alertService.getPersonMedicalRecordWithEmailByLastName(lastName);
 	}
+	
+	@GetMapping("/communityEmail")
+	public List<String> getEmaiFromCity(@RequestParam String  city) {
+		return alertService.getAllEmailByCity(city);
+	}
+	
+	
 	
 }
