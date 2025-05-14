@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public class HouseholdDto {
-	Map<String, List<PersonFullInfoDto>> households = new HashMap<String, List<PersonFullInfoDto>>();
+	Map<String, List<PersonMedicalRecordWithPhoneDto>> households = new HashMap<String, List<PersonMedicalRecordWithPhoneDto>>();
 	
 	
-	public Map<String, List<PersonFullInfoDto>> getHousehold() {
+	public Map<String, List<PersonMedicalRecordWithPhoneDto>> getHousehold() {
 		return households;
 	}
 
-	public void setHousehold(Map<String, List<PersonFullInfoDto>> households) {
+	public void setHousehold(Map<String, List<PersonMedicalRecordWithPhoneDto>> households) {
 		this.households = households;
 	}
 
-	public void addPerson(String address, PersonFullInfoDto person) {
-		households.computeIfAbsent(address, a -> new ArrayList<PersonFullInfoDto>()).add(person);
+	public void addPerson(String address, PersonMedicalRecordWithPhoneDto person) {
+		households.computeIfAbsent(address, a -> new ArrayList<PersonMedicalRecordWithPhoneDto>()).add(person);
 	}
 	
 	

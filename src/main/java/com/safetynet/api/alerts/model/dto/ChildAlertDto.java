@@ -6,9 +6,9 @@ public class ChildAlertDto {
 	private String lastName;
 	private String firstName;
 	private int age;
-	private List<MemberHousehold> membersHousehold;
+	private List<MemberHouseholdDto> membersHousehold;
 		
-	public ChildAlertDto(String lastName, String firstName, int age, List<MemberHousehold> membersHousehold) {
+	public ChildAlertDto(String lastName, String firstName, int age, List<MemberHouseholdDto> membersHousehold) {
 		super();
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -38,14 +38,14 @@ public class ChildAlertDto {
 		this.age = age;
 	}
 	
-	public List<MemberHousehold> getMembersHousehold() {
+	public List<MemberHouseholdDto> getMembersHousehold() {
 		return membersHousehold;
 	}
-	public void setMembersHousehold(List<MemberHousehold> membersHousehold) {
+	public void setMembersHousehold(List<MemberHouseholdDto> membersHousehold) {
 		this.membersHousehold = membersHousehold;
 	}
 	
-	public void addMembersHousehold(MemberHousehold membersHousehold) {
+	public void addMembersHousehold(MemberHouseholdDto membersHousehold) {
 		this.membersHousehold.add(membersHousehold);
 	}
 	

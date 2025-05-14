@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FirestationDto {
-	private List<PersonDto> persons;
+	private List<PersonMiniWithPhoneDto> persons;
 	private int numberChild;
 	private int numberAdult;
 	
@@ -13,12 +13,12 @@ public class FirestationDto {
 		super();
 		numberAdult = 0;
 		numberChild = 0;
-		persons = new ArrayList<PersonDto>();
+		persons = new ArrayList<PersonMiniWithPhoneDto>();
 	}
-	public List<PersonDto> getPersons() {
+	public List<PersonMiniWithPhoneDto> getPersons() {
 		return persons;
 	}
-	public void setPersons(List<PersonDto> persons) {
+	public void setPersons(List<PersonMiniWithPhoneDto> persons) {
 		this.persons = persons;
 	}
 	public int getNumberChild() {

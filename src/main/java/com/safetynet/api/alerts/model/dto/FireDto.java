@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FireDto {
 	int stationNumber;
-	List<PersonFullInfoDto> personsInfos;
+	List<PersonMedicalRecordWithPhoneDto> personsInfos;
 	
 	
 	
@@ -23,15 +23,15 @@ public class FireDto {
 		this.stationNumber = stationNumber;
 	}
 	
-	public List<PersonFullInfoDto> getPersonsInfos() {
+	public List<PersonMedicalRecordWithPhoneDto> getPersonsInfos() {
 		return personsInfos;
 	}
 	
-	public void addPersonFullInfo(PersonFullInfoDto personInfos) {
+	public void addPersonFullInfo(PersonMedicalRecordWithPhoneDto personInfos) {
 		personsInfos.add(personInfos);
 	}
 	
-	public void setPersonFullInfo(List<PersonFullInfoDto> personsInfos) {
+	public void setPersonFullInfo(List<PersonMedicalRecordWithPhoneDto> personsInfos) {
 		this.personsInfos = personsInfos;
 	}
 	

@@ -11,6 +11,7 @@ import com.safetynet.api.alerts.model.dto.ChildAlertDto;
 import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.model.dto.HouseholdDto;
+import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithEmailDto;
 import com.safetynet.api.alerts.service.AlertService;
 
 @RestController
@@ -43,9 +44,13 @@ public class AlertController {
 	
 	@GetMapping("/flood/stations")
 	public HouseholdDto getHousehold(@RequestParam(name = "stations") List<Integer>  stations) {
-		System.out.println(stations);
 		return alertService.getHouseholdsByStationNumbers(stations);
 	}
 	
+	
+	@GetMapping("/personInfo")
+	public List<PersonMedicalRecordWithEmailDto> getHousehold(@RequestParam String  lastName) {
+		return alertService.getPersonMedicalRecordWithEmailByLastName(lastName);
+	}
 	
 }

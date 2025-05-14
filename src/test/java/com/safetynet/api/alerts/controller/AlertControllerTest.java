@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.safetynet.api.alerts.model.dto.ChildAlertDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
-import com.safetynet.api.alerts.model.dto.MemberHousehold;
-import com.safetynet.api.alerts.model.dto.PersonDto;
+import com.safetynet.api.alerts.model.dto.MemberHouseholdDto;
+import com.safetynet.api.alerts.model.dto.PersonMiniWithPhoneDto;
 import com.safetynet.api.alerts.service.AlertService;
 
 @WebMvcTest(controllers = AlertController.class)
@@ -31,7 +30,7 @@ public class AlertControllerTest {
 	
 	@Test
 	public void getChilAlertTest() throws Exception {
-		List<ChildAlertDto> chilsAlert = List.of(new ChildAlertDto("toto", "tata", 8, List.of(new MemberHousehold("papa", "amoi"))));
+		List<ChildAlertDto> chilsAlert = List.of(new ChildAlertDto("toto", "tata", 8, List.of(new MemberHouseholdDto("papa", "amoi"))));
 		
 		when(alertService.getChildrenByAdress("my address")).thenReturn(chilsAlert);
 		mockMvc.perform(get("/childAlert").param("address", "my address"))
@@ -44,9 +43,9 @@ public class AlertControllerTest {
 	@Test
 	public void getPersonCoveredByFireStationTest() throws Exception {
 		FirestationDto firestationDto = new FirestationDto();
-		firestationDto.setPersons(List.of(new PersonDto("toto", "tata", "my address", "0000"),
-											new PersonDto("toto", "children1", "my address", "0000"),
-											new PersonDto("toto", "chldren2", "my address", "0000")));
+		firestationDto.setPersons(List.of(new PersonMiniWithPhoneDto("toto", "tata", "my address", "0000"),
+											new PersonMiniWithPhoneDto("toto", "children1", "my address", "0000"),
+											new PersonMiniWithPhoneDto("toto", "chldren2", "my address", "0000")));
 		firestationDto.setNumberAdult(1);
 		firestationDto.setNumberChild(2);
 				

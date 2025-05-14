@@ -17,9 +17,12 @@ import com.safetynet.api.alerts.model.dto.ChildAlertDto;
 import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.model.dto.HouseholdDto;
-import com.safetynet.api.alerts.model.dto.MemberHousehold;
+import com.safetynet.api.alerts.model.dto.MemberHouseholdDto;
 import com.safetynet.api.alerts.model.dto.PersonDto;
-import com.safetynet.api.alerts.model.dto.PersonFullInfoDto;
+import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithEmailDto;
+import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithPhoneDto;
+import com.safetynet.api.alerts.model.dto.PersonMiniWithPhoneDto;
+
 
 
 @Service
@@ -45,7 +48,7 @@ public class AlertService {
 		log.info("list of person : {}", persons);
 				
 		for (Person person : persons) {
-			List<MemberHousehold> members = new ArrayList<MemberHousehold>();
+			List<MemberHouseholdDto> members = new ArrayList<MemberHouseholdDto>();
 						
 			int age = medicalRecordService.getAge(person.getLastName(), person.getFirstName());
 			if (age <= 18 && age > -1) {
@@ -53,7 +56,7 @@ public class AlertService {
 				
 				persons.stream()
 						.filter(p -> !p.equals(person))
-						.forEach(p -> childDto.addMembersHousehold(new MemberHousehold(p.getLastName(), p.getFirstName())));
+						.forEach(p -> childDto.addMembersHousehold(new MemberHouseholdDto(p.getLastName(), p.getFirstName())));
 			
 				listChilAlert.add(childDto);
 			}
@@ -66,31 +69,31 @@ public class AlertService {
 	public FirestationDto getPersonCoveredByFireStation(int stationNumber){
 		List<String> addressFireStations = fireStationService.getAddressByStationNumber(stationNumber);
 		FirestationDto fireStationDto = new FirestationDto();
-		List<PersonDto> personsDto = new ArrayList<PersonDto>();
+		List<PersonMiniWithPhoneDto> personMiniWithPhoneDto = new ArrayList<PersonMiniWithPhoneDto>();
 				
 		for (String addressFireStation : addressFireStations) {
 			
 		
 			List<Person> persons = personService.getPersonByAddress(addressFireStation);
-			List<PersonDto> personsDtoByAddress = persons.stream()
+			List<PersonMiniWithPhoneDto> personsDtoByAddress = persons.stream()
 													.filter(p -> p.getAddress().equals(addressFireStation))
-													.map(p -> {return new PersonDto(p.getLastName(),
+													.map(p -> {return new PersonMiniWithPhoneDto(p.getLastName(),
 																					p.getFirstName(),
 																					p.getAddress(),
 																					p.getPhone());})
 													.collect(Collectors.toList());
 			
-			personsDto.addAll(personsDtoByAddress);
+			personMiniWithPhoneDto.addAll(personsDtoByAddress);
 		
 		}		
 		
-		personsDto.sort(Comparator.comparing(p -> ((PersonDto) p).getLastName())
+		personMiniWithPhoneDto.sort(Comparator.comparing(p -> ((PersonDto) p).getLastName())
 									.thenComparing(p -> ((PersonDto) p).getFirstName()));
 		//number of child and adult
-		Map<Boolean, List<PersonDto>> part = personsDto.stream()
+		Map<Boolean, List<PersonMiniWithPhoneDto>> part = personMiniWithPhoneDto.stream()
 				.collect(Collectors.partitioningBy(p -> medicalRecordService.getAge(p.getLastName(), p.getFirstName()) <= 18));
 																
-		fireStationDto.setPersons(personsDto);
+		fireStationDto.setPersons(personMiniWithPhoneDto);
 		fireStationDto.setNumberChild(part.get(true).size());
 		fireStationDto.setNumberAdult(part.get(false).size());
 				
@@ -119,16 +122,16 @@ public class AlertService {
 		int stationNumber = fireStationService.getStationNumberByAddress(address);
 		FireDto fireDto = new FireDto();
 				
-		List<PersonFullInfoDto> listPersonFullInfoDto = persons.stream()
+		List<PersonMedicalRecordWithPhoneDto> listPersonFullInfoDto = persons.stream()
 						.map(p -> {MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(p.getLastName(), p.getFirstName());
-									PersonFullInfoDto personFullInfoDto = new PersonFullInfoDto();
-									personFullInfoDto.setLastName(p.getLastName());
-									personFullInfoDto.setFirstName(p.getFirstName());
-									personFullInfoDto.setPhone(p.getPhone());
-									personFullInfoDto.setMedications(medicalRecord.getMedications());
-									personFullInfoDto.setAllergies(medicalRecord.getAllergies());
-									personFullInfoDto.setAge(medicalRecordService.getAge(medicalRecord));
-									return personFullInfoDto;})
+									PersonMedicalRecordWithPhoneDto personMedicalRecordWithPhoneDto = new PersonMedicalRecordWithPhoneDto();
+									personMedicalRecordWithPhoneDto.setLastName(p.getLastName());
+									personMedicalRecordWithPhoneDto.setFirstName(p.getFirstName());
+									personMedicalRecordWithPhoneDto.setPhone(p.getPhone());
+									personMedicalRecordWithPhoneDto.setMedications(medicalRecord.getMedications());
+									personMedicalRecordWithPhoneDto.setAllergies(medicalRecord.getAllergies());
+									personMedicalRecordWithPhoneDto.setAge(medicalRecordService.getAge(medicalRecord));
+									return personMedicalRecordWithPhoneDto;})
 						
 						.collect(Collectors.toList());
 		fireDto.setPersonFullInfo(listPersonFullInfoDto);
@@ -144,20 +147,38 @@ public class AlertService {
 		address.stream()
 				.forEach(a -> {List<Person> persons = personService.getPersonByAddress(a);
 								persons.stream()
-								.forEach(p -> {PersonFullInfoDto personFull = new PersonFullInfoDto();
+								.forEach(p -> {PersonMedicalRecordWithPhoneDto personMedicalRecordWithPhoneDto = new PersonMedicalRecordWithPhoneDto();
 												MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(p.getLastName(), p.getFirstName());
-												personFull.setLastName(p.getLastName());
-												personFull.setFirstName(p.getFirstName());
-												personFull.setPhone(p.getPhone());
-												personFull.setMedications(medicalRecord.getMedications());
-												personFull.setAllergies(medicalRecord.getAllergies());
-												personFull.setAge(medicalRecordService.getAge(medicalRecord));
-												household.addPerson(a, personFull);
+												personMedicalRecordWithPhoneDto.setLastName(p.getLastName());
+												personMedicalRecordWithPhoneDto.setFirstName(p.getFirstName());
+												personMedicalRecordWithPhoneDto.setPhone(p.getPhone());
+												personMedicalRecordWithPhoneDto.setMedications(medicalRecord.getMedications());
+												personMedicalRecordWithPhoneDto.setAllergies(medicalRecord.getAllergies());
+												personMedicalRecordWithPhoneDto.setAge(medicalRecordService.getAge(medicalRecord));
+												household.addPerson(a, personMedicalRecordWithPhoneDto);
 												});
 								});
 		
 		return household;
 							
+	}
+	
+	public List<PersonMedicalRecordWithEmailDto> getPersonMedicalRecordWithEmailByLastName(String lastName){
+		List<Person> persons = personService.getPersonByLastName(lastName);
+		List<PersonMedicalRecordWithEmailDto> personMedicalRecordWithEmailDtos = persons.stream()
+							.map(p -> {MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(p.getLastName(), p.getFirstName());
+										PersonMedicalRecordWithEmailDto personMedicalRecordWithEmailDto = new PersonMedicalRecordWithEmailDto();
+										personMedicalRecordWithEmailDto.setLastName(p.getLastName());
+										personMedicalRecordWithEmailDto.setFirstName(p.getFirstName());
+										personMedicalRecordWithEmailDto.setAddress(p.getAddress());
+										personMedicalRecordWithEmailDto.setEmail(p.getEmail());
+										personMedicalRecordWithEmailDto.setAge(medicalRecordService.getAge(p.getLastName(), p.getFirstName()));
+										personMedicalRecordWithEmailDto.setMedications(medicalRecord.getMedications());
+										personMedicalRecordWithEmailDto.setAllergies(medicalRecord.getAllergies());
+										return personMedicalRecordWithEmailDto;})
+							.collect(Collectors.toList());
+		
+		return personMedicalRecordWithEmailDtos;
 	}
 	
 	

@@ -1,10 +1,10 @@
 package com.safetynet.api.alerts.model.dto;
 
-public class MemberHousehold {
+public class MemberHouseholdDto {
 	private String firstName;
 	private String lastName;
 		
-	public MemberHousehold(String lastName, String firstName) {
+	public MemberHouseholdDto(String lastName, String firstName) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;

@@ -22,6 +22,12 @@ public class PersonService {
 		
 	}
 	
+public List<Person> getPersonByLastName(String lastName){
+		
+		return personRepository.getPersonByLastName(lastName);
+		
+	}
+	
 	public List<Person> getPersonByAddress(String address){
 		return personRepository.getPersonByAddress(address);
 	}
