@@ -76,7 +76,7 @@ public class PersonRepository {
 		return persons;
 	}
 
-	public boolean createPerson(Person person) {
+	public boolean create(Person person) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		boolean ret = false;
 		
@@ -95,6 +95,35 @@ public class PersonRepository {
 		
 		return ret;
 	}
+	
+	public boolean update(String lastName, String firstName,Person person) {
+		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
+		boolean ret = false;
+		
+		if (personArray != null){
+			Gson gson = new Gson();
+			
+			Type personsListType = new TypeToken<List<Person>>() {}.getType();
+			List<Person> persons  = gson.fromJson(personArray, personsListType);
+			persons.stream()
+					.filter(p -> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName))
+					.forEach(p -> {p.setAdress(person.getAddress());
+									p.setCity(person.getCity());
+									p.setEmail(person.getEmail());
+									p.setPhone(person.getPhone());
+									p.setZip(person.getZip());});
+			
+			JsonElement personsJson = gson.toJsonTree(persons);
+			datas.getFileCache().add("persons", personsJson);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
+	}
+	
+	
 
 	public List<Person> getPersonByLastName(String lastName) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");

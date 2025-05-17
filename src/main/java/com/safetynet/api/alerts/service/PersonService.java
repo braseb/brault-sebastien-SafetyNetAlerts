@@ -36,9 +36,12 @@ public List<Person> getPersonByLastName(String lastName){
 		return personRepository.getPersonByCity(city);
 	}
 
-	public boolean createPerson(Person person) {
-		
-		return personRepository.createPerson(person);
+	public boolean createPerson(Person person) {		
+		return personRepository.create(person);
+	}
+	
+	public boolean updatePerson(String lastName, String firstName, Person person) {
+		return personRepository.update(lastName,firstName,person);
 	}
 	
 	
