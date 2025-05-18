@@ -64,6 +64,18 @@ public class MedicalRecordService {
 		
 	}
 	
+	public boolean createMedicalRecord(MedicalRecord medicalRecord) {		
+		return medicalRecordRepository.create(medicalRecord);
+	}
+	
+	public boolean updateMedicalRecord(String lastName, String firstName, MedicalRecord medicalRecord) {
+		return medicalRecordRepository.update(lastName,firstName,medicalRecord);
+	}
+	
+	public boolean removeMedicalRecord(String lastName, String firstName) {
+		return medicalRecordRepository.remove(lastName, firstName);
+	}
+	
 	
 	
 	

@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
 import com.safetynet.api.alerts.model.MedicalRecord;
+
 
 
 @Component
@@ -57,5 +59,73 @@ public class MedicalRecordRepository {
 		
 				
 		return medicalRecordsSelect;
+	}
+
+
+	public boolean create(MedicalRecord medicalRecord) {
+		JsonArray medicalRecordArray = datas.getFileCache().getAsJsonArray("medicalrecords");
+		boolean ret = false;
+		
+		if (medicalRecordArray != null){
+			Gson gson = new Gson();
+			JsonElement medicalRecordJson = gson.toJsonTree(medicalRecord);
+			medicalRecordArray.add(medicalRecordJson);
+			datas.getFileCache().add("medicalrecords", medicalRecordArray);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
+	}
+
+
+	public boolean update(String lastName, String firstName, MedicalRecord medicalRecord) {
+		JsonArray medicalRecordArray = datas.getFileCache().getAsJsonArray("medicalrecords");
+		boolean ret = false;
+		
+		if (medicalRecordArray != null){
+			Gson gson = new Gson();
+			
+			Type medicalRecordListType = new TypeToken<List<MedicalRecord>>() {}.getType();
+			List<MedicalRecord> medicalRecords  = gson.fromJson(medicalRecordArray, medicalRecordListType);
+			medicalRecords.stream()
+					.filter(m -> m.getFirstName().equals(firstName) && m.getLastName().equals(lastName))
+					.forEach(m -> {m.setBirthdate(medicalRecord.getBirthdate());
+									m.setMedications(medicalRecord.getMedications());
+									m.setAllergies(medicalRecord.getAllergies());});
+			
+			JsonElement medicalRecordsJson = gson.toJsonTree(medicalRecords);
+			datas.getFileCache().add("medicalrecords", medicalRecordsJson);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
+	}
+
+
+	public boolean remove(String lastName, String firstName) {
+		JsonArray medicalRecordArray = datas.getFileCache().getAsJsonArray("medicalrecords");
+		boolean ret = false;
+		
+		if (medicalRecordArray != null){
+			Gson gson = new Gson();
+			
+			Type medicalRecordListType = new TypeToken<List<MedicalRecord>>() {}.getType();
+			List<MedicalRecord> medicalRecords  = gson.fromJson(medicalRecordArray, medicalRecordListType);
+			List<MedicalRecord> medicalRecordsToKeep = medicalRecords.stream()
+										.filter(m -> !m.getFirstName().equals(firstName) && !m.getLastName().equals(lastName))
+										.toList();
+			
+			JsonElement medicalRecordsJson = gson.toJsonTree(medicalRecordsToKeep);
+			datas.getFileCache().add("medicalrecords", medicalRecordsJson);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
 	}
 }

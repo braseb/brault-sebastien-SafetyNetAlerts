@@ -14,7 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
 import com.safetynet.api.alerts.model.FireStation;
-import com.safetynet.api.alerts.model.Person;
+
 
 @Component
 public class FireStationRepository {
@@ -23,7 +23,7 @@ public class FireStationRepository {
 	private JsonDatas datas;
 	
 	public List<FireStation> getStationByStationNumber(int stationNumber) {
-		List<FireStation> firestationSelect = Collections.emptyList();
+		List<FireStation> firestationSelect = new ArrayList<FireStation>();
 		JsonArray firestationArray = datas.getFileCache().getAsJsonArray("firestations");
 				
 		if (firestationArray != null) {

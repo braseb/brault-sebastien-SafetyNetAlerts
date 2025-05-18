@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.api.alerts.model.FireStation;
-import com.safetynet.api.alerts.model.Person;
 import com.safetynet.api.alerts.service.FireStationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +28,7 @@ public class FireStationController {
 	public ResponseEntity<String> createFireStation(@RequestBody FireStation fireStation) {
 		boolean created = fireStationService.createFireStation(fireStation);
 		if (created) {
-			return new ResponseEntity<String> ("Fire sattion created", HttpStatus.CREATED);
+			return new ResponseEntity<String> ("Fire station created", HttpStatus.CREATED);
 		}
 		
 		return new ResponseEntity<String> ("Fire station not created", HttpStatus.BAD_REQUEST);
