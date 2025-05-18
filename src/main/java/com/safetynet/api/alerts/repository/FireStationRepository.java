@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
 import com.safetynet.api.alerts.model.FireStation;
+import com.safetynet.api.alerts.model.Person;
 
 @Component
 public class FireStationRepository {
@@ -84,6 +86,97 @@ public class FireStationRepository {
 		}
 	
 		return firestationSelect;
+	}
+
+	public boolean create(FireStation fireStation) {
+		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
+		boolean ret = false;
+		
+		if (fireStationArray != null){
+			Gson gson = new Gson();
+						
+			JsonElement fireStationJson = gson.toJsonTree(fireStation);
+			fireStationArray.add(fireStationJson);
+			datas.getFileCache().add("firestations", fireStationArray);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
+	}
+
+	public boolean update(String address, Integer stationNumber) {
+		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
+		boolean ret = false;
+		
+		if (fireStationArray != null){
+			Gson gson = new Gson();
+			
+			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
+			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
+			fireStations.stream()
+					.filter(f -> f.getAddress().equals(address))
+					.forEach(f -> f.setStation(stationNumber));
+					
+					
+			
+			JsonElement fireStationJson = gson.toJsonTree(fireStations);
+			datas.getFileCache().add("firestations", fireStationJson);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
+	}
+	
+	public boolean remove(Integer stationNumber) {
+		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
+		boolean ret = false;
+		
+		if (fireStationArray != null){
+			Gson gson = new Gson();
+			
+			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
+			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
+			List<FireStation> fireStationsToKeep =  fireStations.stream()
+										.filter(f -> !(f.getStation().equals(stationNumber)))
+										.toList();
+					
+			
+			JsonElement fireStationJson = gson.toJsonTree(fireStationsToKeep);
+			datas.getFileCache().add("firestations", fireStationJson);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
+	}
+
+	public boolean remove(String address) {
+		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
+		boolean ret = false;
+		
+		if (fireStationArray != null){
+			Gson gson = new Gson();
+			
+			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
+			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
+			List<FireStation> fireStationsToKeep =  fireStations.stream()
+										.filter(f -> !(f.getAddress().equals(address)))
+										.toList();
+					
+			
+			JsonElement fireStationJson = gson.toJsonTree(fireStationsToKeep);
+			datas.getFileCache().add("firestations", fireStationJson);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
 	}
 		
 }

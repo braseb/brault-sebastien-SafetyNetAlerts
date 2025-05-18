@@ -38,13 +38,29 @@ public class FireStationService {
 		return address;
 	}
 	
-	public int getStationNumberByAddress(String address) {
+	public Integer getStationNumberByAddress(String address) {
 		List<FireStation> listFireStation = fireStationRepository.getStationNumberByAddress(address);
 		System.out.println(listFireStation);
 		Optional<Integer> stationNumber  = listFireStation.stream()
 												.map(f -> f.getStation())
 												.findFirst();
 			
-		return stationNumber.orElse(-1);
+		return stationNumber.orElse(null);
+	}
+	
+	public boolean createFireStation(FireStation fireStation) {		
+		return fireStationRepository.create(fireStation);
+	}
+	
+	public boolean updateFireStation(String address, Integer stationNumber) {
+		return fireStationRepository.update(address,stationNumber);
+	}
+	
+	public boolean removeFireStationByNumber(Integer stationNumber) {
+		return fireStationRepository.remove(stationNumber);
+	}
+	
+	public boolean removeFireStationByAddress(String address) {
+		return fireStationRepository.remove(address);
 	}
 }

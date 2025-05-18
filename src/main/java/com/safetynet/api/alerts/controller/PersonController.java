@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.api.alerts.model.Person;
@@ -54,6 +53,7 @@ public class PersonController {
 	}
 	
 	@PutMapping("/person/{lastName}/{firstName}")
+	@Operation(summary = "Modifier une personne")
 	public ResponseEntity<String> updatePerson(@PathVariable String lastName, @PathVariable String firstName, @RequestBody Person person) {
 		List<Person> persons = personService.getPersonByName(lastName, firstName);
 		
@@ -72,6 +72,7 @@ public class PersonController {
 	}
 	
 	@DeleteMapping("/person/{lastName}/{firstName}")
+	@Operation(summary = "Supprimer une personne")
 	public ResponseEntity<String> removePerson(@PathVariable String lastName, @PathVariable String firstName){
 		List<Person> persons = personService.getPersonByName(lastName, firstName);
 		if (persons.isEmpty()) {
