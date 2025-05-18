@@ -24,7 +24,7 @@ public class JsonDatas {
 	public JsonDatas() throws IOException, FileNotFoundException {
 		JsonReader reader = new JsonReader(new FileReader(fileJsonPath));
 		fileCache = JsonParser.parseReader(reader).getAsJsonObject();
-		log.info("Fichier json correstement chargé");
+		log.info("Fichier json correctement chargé");
 		reader.close();
 	}
 
@@ -43,7 +43,7 @@ public class JsonDatas {
 		try {
 			FileWriter filewriter = new FileWriter(fileJsonPath);
 			gson.toJson(fileCache, filewriter);
-			log.info("Fichier json correstement enregistré");
+			log.info("Fichier json correctement enregistré");
 			filewriter.close();
 			ret = true;
 			
