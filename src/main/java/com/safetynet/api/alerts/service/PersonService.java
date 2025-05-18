@@ -44,5 +44,9 @@ public List<Person> getPersonByLastName(String lastName){
 		return personRepository.update(lastName,firstName,person);
 	}
 	
+	public boolean removePerson(String lastName, String firstName) {
+		return personRepository.remove(lastName, firstName);
+	}
+	
 	
 }

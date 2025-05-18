@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,18 +57,35 @@ public class PersonController {
 	public ResponseEntity<String> updatePerson(@PathVariable String lastName, @PathVariable String firstName, @RequestBody Person person) {
 		List<Person> persons = personService.getPersonByName(lastName, firstName);
 		
-		
-		boolean updated = persons.stream()
-							.allMatch(p-> personService.updatePerson(lastName, firstName, person));
-		
 		if (persons.isEmpty()) {
 			return new ResponseEntity<String> ("Personne non trouvée", HttpStatus.NOT_FOUND);
 		}
+		
+		boolean updated = persons.stream()
+							.allMatch(p-> personService.updatePerson(lastName, firstName, person));
+				
 		if (updated) {
 			return new ResponseEntity<String> ("La personne a bien été mise à jour", HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<String> ("Données de mise à jour invalide", HttpStatus.BAD_REQUEST);
+	}
+	
+	@DeleteMapping("/person/{lastName}/{firstName}")
+	public ResponseEntity<String> removePerson(@PathVariable String lastName, @PathVariable String firstName){
+		List<Person> persons = personService.getPersonByName(lastName, firstName);
+		if (persons.isEmpty()) {
+			return new ResponseEntity<String> ("Personne non trouvée", HttpStatus.NOT_FOUND);
+		}
+		boolean removed = persons.stream()
+							.allMatch(p -> personService.removePerson(lastName, firstName));
+		
+		if (removed) {
+			return new ResponseEntity<String> ("La personne a bien été supprimée", HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<String> ("Erreur lors de la suppression", HttpStatus.INTERNAL_SERVER_ERROR);
+		
 	}
 	
 	

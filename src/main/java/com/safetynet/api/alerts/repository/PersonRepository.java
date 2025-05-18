@@ -123,6 +123,30 @@ public class PersonRepository {
 		return ret;
 	}
 	
+	public boolean remove(String lastName, String firstName) {
+		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
+		boolean ret = false;
+		
+		if (personArray != null){
+			Gson gson = new Gson();
+			
+			Type personsListType = new TypeToken<List<Person>>() {}.getType();
+			List<Person> persons  = gson.fromJson(personArray, personsListType);
+			List<Person> personsToKeep =  persons.stream()
+										.filter(p -> !(p.getFirstName().equals(firstName)) && !(p.getLastName().equals(lastName)))
+										.toList();
+					
+			
+			JsonElement personsJson = gson.toJsonTree(personsToKeep);
+			datas.getFileCache().add("persons", personsJson);
+			ret = datas.writeJsonToFile();
+			
+			
+		}
+		
+		return ret;
+	}
+	
 	
 
 	public List<Person> getPersonByLastName(String lastName) {
