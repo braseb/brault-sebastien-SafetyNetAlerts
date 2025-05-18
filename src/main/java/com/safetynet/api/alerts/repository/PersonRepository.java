@@ -107,7 +107,7 @@ public class PersonRepository {
 			List<Person> persons  = gson.fromJson(personArray, personsListType);
 			persons.stream()
 					.filter(p -> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName))
-					.forEach(p -> {p.setAdress(person.getAddress());
+					.forEach(p -> {p.setAddress(person.getAddress());
 									p.setCity(person.getCity());
 									p.setEmail(person.getEmail());
 									p.setPhone(person.getPhone());

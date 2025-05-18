@@ -5,10 +5,10 @@ import java.util.List;
 public class ChildAlertDto {
 	private String lastName;
 	private String firstName;
-	private int age;
+	private Integer age;
 	private List<MemberHouseholdDto> membersHousehold;
 		
-	public ChildAlertDto(String lastName, String firstName, int age, List<MemberHouseholdDto> membersHousehold) {
+	public ChildAlertDto(String lastName, String firstName, Integer age, List<MemberHouseholdDto> membersHousehold) {
 		super();
 		this.lastName = lastName;
 		this.firstName = firstName;

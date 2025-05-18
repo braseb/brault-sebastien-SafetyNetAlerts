@@ -2,10 +2,10 @@ package com.safetynet.api.alerts.model.dto;
 
 public class PersonDto extends PersonMiniDto{
 	
-	private int age;
+	private Integer age;
 		
 	
-	public PersonDto(String lastName, String firstName, String address, int age) {
+	public PersonDto(String lastName, String firstName, String address, Integer age) {
 		super(lastName,firstName,address);
 		this.age = age;
 	}
@@ -16,12 +16,12 @@ public class PersonDto extends PersonMiniDto{
 	}
 
 
-	public int getAge() {
+	public Integer getAge() {
 		return age;
 	}
 
 
-	public void setAge(int age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 	

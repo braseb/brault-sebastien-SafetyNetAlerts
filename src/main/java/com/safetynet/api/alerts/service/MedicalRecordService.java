@@ -24,10 +24,10 @@ public class MedicalRecordService {
 
     
 	
-	public int getAge(String lastName, String firstName) {
+	public Integer getAge(String lastName, String firstName) {
 		Optional<MedicalRecord> optMedicalRecord = medicalRecordRepository.getMedicalRecordByName(lastName, firstName);
 		
-		int age = -1;
+		Integer age = null;
 		
 		if (optMedicalRecord.isPresent()){
 			MedicalRecord medicalRecord = optMedicalRecord.get();
@@ -42,8 +42,8 @@ public class MedicalRecordService {
 		
 	}
 	
-	public int getAge(MedicalRecord medicalRecord) {
-		int age = -1;
+	public Integer getAge(MedicalRecord medicalRecord) {
+		Integer age = null;
 		
 		try {
 			age = Period.between(LocalDate.parse(
