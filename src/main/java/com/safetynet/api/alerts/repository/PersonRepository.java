@@ -16,8 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
 import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
 import com.safetynet.api.alerts.model.Person;
-import com.safetynet.api.alerts.model.dto.PersonCreateDto;
-import com.safetynet.api.alerts.model.dto.mapping.PersonMapping;
+
 
 @Component
 public class PersonRepository {
@@ -80,23 +79,24 @@ public class PersonRepository {
 		return persons;
 	}
 
-	public PersonCreateDto create(PersonCreateDto personCreate) {
+	public Person create(Person personCreate) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		Person person = null;
 				
 		if (personArray != null){
 			Gson gson = new Gson();
-			person = PersonMapping.mapToPerson(personCreate);
 			
-			JsonElement personJson = gson.toJsonTree(person);
+			
+			JsonElement personJson = gson.toJsonTree(personCreate);
 			personArray.add(personJson);
 			datas.getFileCache().add("persons", personArray);
 			datas.writeJsonToFile();
+			person = personCreate;
 			
 			
 		}
 		
-		return personCreate;
+		return person;
 	}
 	
 	public Person update(Person personUpdate)  {

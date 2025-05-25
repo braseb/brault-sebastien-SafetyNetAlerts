@@ -1,14 +1,12 @@
 package com.safetynet.api.alerts.controller;
 
 
-import java.util.Collections;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import com.safetynet.api.alerts.model.Person;
 import com.safetynet.api.alerts.model.dto.PersonCreateDto;
 import com.safetynet.api.alerts.model.dto.PersonUpdateDto;
 import com.safetynet.api.alerts.service.PersonService;
@@ -51,7 +48,7 @@ public class PersonController {
 	
 	@PutMapping("/person/{lastName}/{firstName}")
 	@Operation(summary = "Modifier une personne")
-	public ResponseEntity<PersonUpdateDto> updatePerson(@PathVariable String lastName, @PathVariable String firstName, @RequestBody PersonUpdateDto personToUpdate) {
+	public ResponseEntity<PersonUpdateDto> updatePerson(@PathVariable String lastName, @PathVariable String firstName, @Valid  @RequestBody PersonUpdateDto personToUpdate) {
 		//List<Person> persons = personService.getPersonByName(lastName, firstName);
 		
 		//if (persons.isEmpty()) {

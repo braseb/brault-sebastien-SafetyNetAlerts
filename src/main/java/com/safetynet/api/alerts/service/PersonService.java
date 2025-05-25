@@ -17,14 +17,10 @@ import com.safetynet.api.alerts.repository.PersonRepository;
 @Service
 public class PersonService {
 
-    private final Person person;
-	
+    	
 	@Autowired
 	private PersonRepository personRepository;
-
-    PersonService(Person person) {
-        this.person = person;
-    }
+   
 	
 	public List<Person> getPersonByName(String lastName, String firstName) {
 		
@@ -46,9 +42,10 @@ public List<Person> getPersonByLastName(String lastName){
 		return personRepository.getPersonByCity(city);
 	}
 
-	public PersonCreateDto createPerson(PersonCreateDto person) {		
+	public PersonCreateDto createPerson(PersonCreateDto personToCreate) {		
 		
-		return personRepository.create(person);
+		Person person = PersonMapping.mapToPerson(personToCreate);
+		return PersonMapping.mapToPersonCreateDto(personRepository.create(person));
 		
 	}
 	
