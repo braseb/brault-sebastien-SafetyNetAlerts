@@ -1,5 +1,6 @@
 package com.safetynet.api.alerts.repository;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -131,7 +132,7 @@ public class FireStationRepository {
 		return ret;
 	}
 	
-	public boolean remove(Integer stationNumber) {
+	public boolean remove(Integer stationNumber){
 		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
 		boolean ret = false;
 		

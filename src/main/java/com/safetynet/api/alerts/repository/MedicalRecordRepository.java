@@ -2,6 +2,7 @@ package com.safetynet.api.alerts.repository;
 
 
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +44,7 @@ public class MedicalRecordRepository {
 		return medicalRecords;
 	}
 	
-	public Optional<MedicalRecord> getMedicalRecordByName(String lastName, String firstName)  {
+	public Optional<MedicalRecord> getMedicalRecordByName(String lastName, String firstName) {
 		JsonArray medicalRecordsArray = datas.getFileCache().getAsJsonArray("medicalrecords");
 		Optional<MedicalRecord> medicalRecordsSelect = null;
 		if (medicalRecordsArray != null) {

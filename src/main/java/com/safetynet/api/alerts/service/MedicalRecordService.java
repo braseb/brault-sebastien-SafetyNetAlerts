@@ -1,5 +1,6 @@
 package com.safetynet.api.alerts.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -42,7 +43,7 @@ public class MedicalRecordService {
 		
 	}
 	
-	public Integer getAge(MedicalRecord medicalRecord) {
+	public Integer getAge(MedicalRecord medicalRecord){
 		Integer age = null;
 		
 		try {
@@ -58,21 +59,21 @@ public class MedicalRecordService {
 		return age;
 	}
 	
-	public MedicalRecord getMedicalRecordByName(String lastName, String firstName) {
+	public MedicalRecord getMedicalRecordByName(String lastName, String firstName){
 		Optional<MedicalRecord> optMedicalRecord = medicalRecordRepository.getMedicalRecordByName(lastName, firstName);
 		return optMedicalRecord.orElse(new MedicalRecord());
 		
 	}
 	
-	public boolean createMedicalRecord(MedicalRecord medicalRecord) {		
+	public boolean createMedicalRecord(MedicalRecord medicalRecord){		
 		return medicalRecordRepository.create(medicalRecord);
 	}
 	
-	public boolean updateMedicalRecord(String lastName, String firstName, MedicalRecord medicalRecord) {
+	public boolean updateMedicalRecord(String lastName, String firstName, MedicalRecord medicalRecord){
 		return medicalRecordRepository.update(lastName,firstName,medicalRecord);
 	}
 	
-	public boolean removeMedicalRecord(String lastName, String firstName) {
+	public boolean removeMedicalRecord(String lastName, String firstName){
 		return medicalRecordRepository.remove(lastName, firstName);
 	}
 	

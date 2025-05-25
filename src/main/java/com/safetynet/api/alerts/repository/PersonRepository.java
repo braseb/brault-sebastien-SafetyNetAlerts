@@ -3,6 +3,7 @@ package com.safetynet.api.alerts.repository;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
+import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
 import com.safetynet.api.alerts.model.Person;
+import com.safetynet.api.alerts.model.dto.PersonCreateDto;
+import com.safetynet.api.alerts.model.dto.mapping.PersonMapping;
 
 @Component
 public class PersonRepository {
@@ -25,7 +29,7 @@ public class PersonRepository {
 		
 	}
 	
-	public List<Person> getPersonByName(String lastName, String firstName)  {
+	public List<Person> getPersonByName(String lastName, String firstName) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		
 		List<Person> personsSelect = new ArrayList<Person>();
@@ -43,7 +47,7 @@ public class PersonRepository {
 		return personsSelect;
 	}
 		
-	public List<Person> getPersonByAddress(String address)  {
+	public List<Person> getPersonByAddress(String address) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		List<Person> personsSelect = new ArrayList<Person>();
 		
@@ -76,51 +80,59 @@ public class PersonRepository {
 		return persons;
 	}
 
-	public boolean create(Person person) {
+	public PersonCreateDto create(PersonCreateDto personCreate) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
-		boolean ret = false;
-		
+		Person person = null;
+				
 		if (personArray != null){
 			Gson gson = new Gson();
-			//Type personsListType = new TypeToken<List<Person>>() {}.getType();
-			//List<Person> persons  = gson.fromJson(personArray, personsListType);
+			person = PersonMapping.mapToPerson(personCreate);
 			
 			JsonElement personJson = gson.toJsonTree(person);
 			personArray.add(personJson);
 			datas.getFileCache().add("persons", personArray);
-			ret = datas.writeJsonToFile();
+			datas.writeJsonToFile();
 			
 			
 		}
 		
-		return ret;
+		return personCreate;
 	}
 	
-	public boolean update(String lastName, String firstName,Person person) {
+	public Person update(Person personUpdate)  {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
-		boolean ret = false;
 		
+				
 		if (personArray != null){
 			Gson gson = new Gson();
 			
 			Type personsListType = new TypeToken<List<Person>>() {}.getType();
 			List<Person> persons  = gson.fromJson(personArray, personsListType);
-			persons.stream()
-					.filter(p -> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName))
-					.forEach(p -> {p.setAddress(person.getAddress());
-									p.setCity(person.getCity());
-									p.setEmail(person.getEmail());
-									p.setPhone(person.getPhone());
-									p.setZip(person.getZip());});
+			Optional<Person> personFound = persons.stream()
+								.filter(p -> p.getFirstName().equals(personUpdate.getFirstName()) && p.getLastName().equals(personUpdate.getLastName()))
+								.peek(p -> {p.setAddress(personUpdate.getAddress());
+											p.setCity(personUpdate.getCity());
+											p.setEmail(personUpdate.getEmail());
+											p.setPhone(personUpdate.getPhone());
+											p.setZip(personUpdate.getZip());})
+								.findAny();
+								
+			if (!personFound.isPresent()) {
+				throw new EntityNotFoundException("Person not found");
+				
+			}
+			else {
+				JsonElement personsJson = gson.toJsonTree(persons);
+				datas.getFileCache().add("persons", personsJson);
+				datas.writeJsonToFile();
+				return personFound.get();
+			}
 			
-			JsonElement personsJson = gson.toJsonTree(persons);
-			datas.getFileCache().add("persons", personsJson);
-			ret = datas.writeJsonToFile();
 			
 			
 		}
 		
-		return ret;
+		return null;
 	}
 	
 	public boolean remove(String lastName, String firstName) {
