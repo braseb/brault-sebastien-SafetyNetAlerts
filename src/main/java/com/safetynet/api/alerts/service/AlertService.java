@@ -18,7 +18,6 @@ import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.model.dto.HouseholdDto;
 import com.safetynet.api.alerts.model.dto.MemberHouseholdDto;
-import com.safetynet.api.alerts.model.dto.PersonDto;
 import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithEmailDto;
 import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithPhoneDto;
 import com.safetynet.api.alerts.model.dto.PersonMiniWithPhoneDto;
@@ -42,7 +41,7 @@ public class AlertService {
         this.medicalRecordService = medicalRecordService;
     }
 	
-	public List<ChildAlertDto> getChildrenByAdress(String address){
+	public List<ChildAlertDto> getChildrenByAddress(String address){
 		List<Person> persons = personService.getPersonByAddress(address);
 		List<ChildAlertDto> listChilAlert = new ArrayList<ChildAlertDto>();
 		log.info("list of person : {}", persons);

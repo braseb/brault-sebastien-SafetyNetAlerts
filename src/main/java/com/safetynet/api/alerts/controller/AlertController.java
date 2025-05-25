@@ -3,6 +3,8 @@ package com.safetynet.api.alerts.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +23,15 @@ public class AlertController {
 	private AlertService alertService;
 	
 	@GetMapping("/childAlert")
-	public List<ChildAlertDto> getChildAlert(@RequestParam("address") final String address){
+	public ResponseEntity<List<ChildAlertDto>> getChildAlert(@RequestParam("address") final String address){
 		
-		return alertService.getChildrenByAdress(address);
+		List<ChildAlertDto> childAlert = alertService.getChildrenByAddress(address);
+		//return alertService.getChildrenByAdress(address);
+		if (childAlert.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(alertService.getChildrenByAddress(address));
+		}
+		
+		return ResponseEntity.ok(alertService.getChildrenByAddress(address));
 		
 	}
 	

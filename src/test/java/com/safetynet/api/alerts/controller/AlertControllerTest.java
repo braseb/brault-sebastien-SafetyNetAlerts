@@ -32,7 +32,7 @@ public class AlertControllerTest {
 	public void getChilAlertTest() throws Exception {
 		List<ChildAlertDto> chilsAlert = List.of(new ChildAlertDto("toto", "tata", 8, List.of(new MemberHouseholdDto("papa", "amoi"))));
 		
-		when(alertService.getChildrenByAdress("my address")).thenReturn(chilsAlert);
+		when(alertService.getChildrenByAddress("my address")).thenReturn(chilsAlert);
 		mockMvc.perform(get("/childAlert").param("address", "my address"))
 					.andDo(print())
 					.andExpect(status().isOk())
