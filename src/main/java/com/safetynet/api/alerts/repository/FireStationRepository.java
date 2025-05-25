@@ -13,6 +13,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
+import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
+import com.safetynet.api.alerts.exceptions.EntityNotFoundExceptionWithReturn;
 import com.safetynet.api.alerts.model.FireStation;
 
 
@@ -35,6 +37,8 @@ public class FireStationRepository {
 			firestationSelect = fireStations.stream()
 										.filter(f -> f.getStation() == stationNumber)
 										.toList();
+			
+			
 			
 		}
 		
@@ -64,6 +68,8 @@ public class FireStationRepository {
 			}
 			
 			
+			
+			
 		}
 		
 				
@@ -71,7 +77,7 @@ public class FireStationRepository {
 	}
 
 	public List<FireStation> getStationNumberByAddress(String address) {
-		List<FireStation> firestationSelect = Collections.emptyList();
+		List<FireStation> firestationSelect = new ArrayList<FireStation>();
 		JsonArray firestationArray = datas.getFileCache().getAsJsonArray("firestations");
 		if (firestationArray != null) {
 					
@@ -82,6 +88,8 @@ public class FireStationRepository {
 			firestationSelect = fireStations.stream()
 											.filter(f -> f.getAddress().toUpperCase().equals(address.toUpperCase()))
 											.toList();
+			
+			
 		
 		}
 	

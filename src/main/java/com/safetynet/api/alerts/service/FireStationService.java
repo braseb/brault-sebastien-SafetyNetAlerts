@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
+import com.safetynet.api.alerts.exceptions.EntityNotFoundExceptionWithReturn;
 import com.safetynet.api.alerts.model.FireStation;
 import com.safetynet.api.alerts.repository.FireStationRepository;
 
@@ -23,7 +26,10 @@ public class FireStationService {
 		List<String> address  = listFireStation.stream()
 												.map(f -> f.getAddress())
 												.collect(Collectors.toList());
-				
+		if (address.isEmpty()) {
+			throw new EntityNotFoundExceptionWithReturn("Address not found with this station number", stationnumber);
+		}
+		
 		return address;
 	}
 	
@@ -34,7 +40,9 @@ public class FireStationService {
 												.map(f -> f.getAddress())
 												.distinct()
 												.collect(Collectors.toList());
-												
+		if (address.isEmpty()) {
+			throw new EntityNotFoundException("Fire station not found hihi");
+		}										
 				
 		return address;
 	}
@@ -45,7 +53,10 @@ public class FireStationService {
 		Optional<Integer> stationNumber  = listFireStation.stream()
 												.map(f -> f.getStation())
 												.findFirst();
-			
+		if (stationNumber.isEmpty()) {
+			throw new EntityNotFoundExceptionWithReturn("Fire station number not found", address);
+		}
+		
 		return stationNumber.orElse(null);
 	}
 	

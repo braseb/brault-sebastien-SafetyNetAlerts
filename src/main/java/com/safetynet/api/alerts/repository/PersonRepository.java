@@ -41,8 +41,8 @@ public class PersonRepository {
 									.filter(p-> p.getFirstName().toUpperCase().equals(firstName.toUpperCase()) && 
 											p.getLastName().toUpperCase().equals(lastName.toUpperCase()))
 									.collect(Collectors.toList());
-		}	
-		
+		}
+				
 		
 		return personsSelect;
 	}
@@ -150,11 +150,16 @@ public class PersonRepository {
 										.filter(p -> !(p.getFirstName().toUpperCase().equals(firstName.toUpperCase())) 
 												&& !(p.getLastName().toUpperCase().equals(lastName.toUpperCase())))
 										.toList();
-					
 			
-			JsonElement personsJson = gson.toJsonTree(personsToKeep);
-			datas.getFileCache().add("persons", personsJson);
-			ret = datas.writeJsonToFile();
+			if (persons.size() != personsToKeep.size()) {
+				JsonElement personsJson = gson.toJsonTree(personsToKeep);
+				datas.getFileCache().add("persons", personsJson);
+				ret = datas.writeJsonToFile();
+			}
+			else {
+				throw new EntityNotFoundException("Person not found");
+			}
+			
 			
 			
 		}

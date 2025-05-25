@@ -87,8 +87,8 @@ public class AlertService {
 		
 		}		
 		
-		personMiniWithPhoneDto.sort(Comparator.comparing(p -> ((PersonDto) p).getLastName())
-									.thenComparing(p -> ((PersonDto) p).getFirstName()));
+		personMiniWithPhoneDto.sort(Comparator.comparing(p -> ((PersonMiniWithPhoneDto) p).getLastName())
+									.thenComparing(p -> ((PersonMiniWithPhoneDto) p).getFirstName()));
 		//number of child and adult
 		Map<Boolean, List<PersonMiniWithPhoneDto>> part = personMiniWithPhoneDto.stream()
 				.collect(Collectors.partitioningBy(p -> medicalRecordService.getAge(p.getLastName(), p.getFirstName()) <= 18));

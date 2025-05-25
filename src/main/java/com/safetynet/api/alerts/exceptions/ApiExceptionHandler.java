@@ -1,5 +1,7 @@
 package com.safetynet.api.alerts.exceptions;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -34,6 +36,16 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .body(new ErrorMessage("400", message));
     }
+	
+	
+	@ExceptionHandler(EntityNotFoundExceptionWithReturn.class)
+	public ResponseEntity<Map<String, Object>> handleNotFoundEntity(EntityNotFoundExceptionWithReturn ex){
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("message", ex.getMessage());
+		body.put("element", ex.getElement());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+		
+	}
 	
 	
 	
