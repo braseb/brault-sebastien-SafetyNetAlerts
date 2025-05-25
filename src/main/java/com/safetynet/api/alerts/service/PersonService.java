@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.api.alerts.exceptions.EntityAlreadyExistException;
 import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
 import com.safetynet.api.alerts.model.Person;
 import com.safetynet.api.alerts.model.dto.PersonCreateDto;
@@ -43,8 +44,13 @@ public List<Person> getPersonByLastName(String lastName){
 
 	public PersonCreateDto createPerson(PersonCreateDto personToCreate) {		
 		
-		Person person = PersonMapping.mapToPerson(personToCreate);
-		return PersonMapping.mapToPersonCreateDto(personRepository.create(person));
+		try {
+			Person person = PersonMapping.mapToPerson(personToCreate);
+			return PersonMapping.mapToPersonCreateDto(personRepository.create(person));
+		} catch (EntityAlreadyExistException e) {
+			throw e;
+		}
+		
 		
 	}
 	
@@ -59,9 +65,12 @@ public List<Person> getPersonByLastName(String lastName){
 		
 	}
 	
-	public Boolean removePerson(String lastName, String firstName) {
-		
-			return personRepository.remove(lastName, firstName);
+	public void removePerson(String lastName, String firstName) {
+		try {
+			personRepository.remove(lastName, firstName);
+		} catch (EntityNotFoundException e) {
+			throw e;
+		}	
 		
 	}
 	

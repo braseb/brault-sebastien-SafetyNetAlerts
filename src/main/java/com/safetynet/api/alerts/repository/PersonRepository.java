@@ -2,7 +2,6 @@ package com.safetynet.api.alerts.repository;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -93,9 +92,9 @@ public class PersonRepository {
 			List<Person> persons  = gson.fromJson(personArray, personsListType);
 			
 			boolean exist = persons.stream()
-							.anyMatch(p-> 
-									p.getFirstName().equalsIgnoreCase(personCreate.getFirstName()) && 
-									p.getLastName().equalsIgnoreCase(personCreate.getLastName()));
+									.anyMatch(p-> 
+										p.getFirstName().equalsIgnoreCase(personCreate.getFirstName()) && 
+										p.getLastName().equalsIgnoreCase(personCreate.getLastName()));
 			
 			if (!exist) {
 				JsonElement personJson = gson.toJsonTree(personCreate);
@@ -151,10 +150,9 @@ public class PersonRepository {
 		return null;
 	}
 	
-	public boolean remove(String lastName, String firstName) {
+	public void remove(String lastName, String firstName) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
-		boolean ret = false;
-		
+				
 		if (personArray != null){
 			Gson gson = new Gson();
 			
@@ -168,17 +166,14 @@ public class PersonRepository {
 			if (persons.size() != personsToKeep.size()) {
 				JsonElement personsJson = gson.toJsonTree(personsToKeep);
 				datas.getFileCache().add("persons", personsJson);
-				ret = datas.writeJsonToFile();
+				datas.writeJsonToFile();
 			}
 			else {
 				throw new EntityNotFoundException("Person not found");
 			}
 			
-			
-			
 		}
 		
-		return ret;
 	}
 	
 	

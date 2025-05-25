@@ -7,9 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynet.api.alerts.exceptions.EntityAlreadyExistException;
 import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
 import com.safetynet.api.alerts.exceptions.EntityNotFoundExceptionWithReturn;
 import com.safetynet.api.alerts.model.FireStation;
+import com.safetynet.api.alerts.model.dto.FireStationCreateDto;
+import com.safetynet.api.alerts.model.dto.FireStationUpdateDto;
+import com.safetynet.api.alerts.model.dto.mapping.FireStationMapping;
 import com.safetynet.api.alerts.repository.FireStationRepository;
 
 
@@ -40,7 +44,7 @@ public class FireStationService {
 												.distinct()
 												.collect(Collectors.toList());
 		if (address.isEmpty()) {
-			throw new EntityNotFoundException("Fire station not found hihi");
+			throw new EntityNotFoundException("Fire station not found");
 		}										
 				
 		return address;
@@ -59,19 +63,42 @@ public class FireStationService {
 		return stationNumber.orElse(null);
 	}
 	
-	public boolean createFireStation(FireStation fireStation) {		
-		return fireStationRepository.create(fireStation);
+	public FireStationCreateDto createFireStation(FireStationCreateDto fireStationCreate) {		
+		
+		try {
+			FireStation fireStation = FireStationMapping.mapToFireStation(fireStationCreate);
+			return FireStationMapping.mapToFireStationCreateDto(fireStationRepository.create(fireStation));
+		} catch (EntityAlreadyExistException e) {
+			throw e;
+		}
+		
 	}
 	
-	public boolean updateFireStation(String address, Integer stationNumber) {
-		return fireStationRepository.update(address,stationNumber);
+	public FireStationUpdateDto updateFireStation(String address, FireStationUpdateDto fireStationUpdate) {
+		try {
+			FireStation fireStation = FireStationMapping.mapToFireStation(address, fireStationUpdate);
+			return FireStationMapping.mapToFireStationUpdateDto(fireStationRepository.update(address,fireStation));
+		} catch (EntityNotFoundException e) {
+			throw e;
+		}
+	}
+		
+	
+	public void removeFireStationByNumber(Integer stationNumber) {
+		try {
+			fireStationRepository.remove(stationNumber);
+		} catch (EntityNotFoundException e) {
+			throw e;
+		}
+		
 	}
 	
-	public boolean removeFireStationByNumber(Integer stationNumber) {
-		return fireStationRepository.remove(stationNumber);
-	}
-	
-	public boolean removeFireStationByAddress(String address) {
-		return fireStationRepository.remove(address);
+	public void removeFireStationByAddress(String address) {
+		try {
+			fireStationRepository.remove(address);
+		} catch (EntityNotFoundException e) {
+			throw e;
+		}
+		
 	}
 }
