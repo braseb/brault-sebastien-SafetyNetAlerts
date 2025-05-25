@@ -15,16 +15,25 @@ public class PersonCreateDto{
 	
 	
 	
-	public  PersonCreateDto(String lastName, 
-			String firstName,
-			String address,
-			String city,
-			String zip,
-			String phone,
-			String email) {}
-	
-	
-		
+	public PersonCreateDto(String lastName,
+							String firstName, 
+							String address, 
+							String city,
+							String zip, 
+							String phone, 
+							String email) {
+		super();
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.address = address;
+		this.city = city;
+		this.zip = zip;
+		this.phone = phone;
+		this.email = email;
+	}
+
+
+
 	public String getLastName() {
 		return lastName;
 	}

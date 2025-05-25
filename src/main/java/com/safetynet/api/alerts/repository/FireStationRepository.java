@@ -2,7 +2,6 @@ package com.safetynet.api.alerts.repository;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
-import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
-import com.safetynet.api.alerts.exceptions.EntityNotFoundExceptionWithReturn;
 import com.safetynet.api.alerts.model.FireStation;
 
 

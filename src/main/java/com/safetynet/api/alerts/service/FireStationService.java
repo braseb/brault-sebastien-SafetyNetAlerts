@@ -1,6 +1,5 @@
 package com.safetynet.api.alerts.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

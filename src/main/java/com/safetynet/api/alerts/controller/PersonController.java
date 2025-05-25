@@ -34,57 +34,28 @@ public class PersonController {
     	
 	
 	@PostMapping("/person")
-	@Operation(summary = "Créer une nouvelle personne")
-	public ResponseEntity<PersonCreateDto> createPerson(@Valid @RequestBody PersonCreateDto person) {
-		PersonCreateDto personCreated = personService.createPerson(person);
+	@Operation(summary = "Create a new person")
+	public ResponseEntity<PersonCreateDto> createPerson(@Valid @RequestBody PersonCreateDto personToCreate) {
 		
+		PersonCreateDto personCreated = personService.createPerson(personToCreate);
 		return new ResponseEntity<PersonCreateDto>(personCreated, HttpStatus.CREATED);
-		
-		
-		
-		
-		
 	}
 	
 	@PutMapping("/person/{lastName}/{firstName}")
-	@Operation(summary = "Modifier une personne")
+	@Operation(summary = "Update a person")
 	public ResponseEntity<PersonUpdateDto> updatePerson(@PathVariable String lastName, @PathVariable String firstName, @Valid  @RequestBody PersonUpdateDto personToUpdate) {
-		//List<Person> persons = personService.getPersonByName(lastName, firstName);
 		
-		//if (persons.isEmpty()) {
-		//	return new ResponseEntity<String> ("Personne non trouvée", HttpStatus.NOT_FOUND);
-		//}
-		
-		//boolean updated = persons.stream()
-		//					.allMatch(p-> personService.updatePerson(lastName, firstName, person));
 		PersonUpdateDto personUpdated = personService.updatePerson(lastName, firstName, personToUpdate);
-				
-		//if (updated) {
 		return ResponseEntity.ok(personUpdated);
-		//}
 		
-		//return new ResponseEntity<String> ("Données de mise à jour invalide", HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/person/{lastName}/{firstName}")
-	@Operation(summary = "Supprimer une personne")
+	@Operation(summary = "Delete a person")
 	public ResponseEntity<?> removePerson(@PathVariable String lastName, @PathVariable String firstName){
-		//List<Person> persons = personService.getPersonByName(lastName, firstName);
-		//if (persons.isEmpty()) {
-		//	return new ResponseEntity<String> ("Personne non trouvée", HttpStatus.NOT_FOUND);
-		//}
-		//boolean removed = persons.stream()
-		//					.allMatch(p -> personService.removePerson(lastName, firstName));
 		personService.removePerson(lastName, firstName);
-		
 		return ResponseEntity.noContent().build();
-		
-		//if (removed) {
-		//	return new ResponseEntity<String> ("La personne a bien été supprimée", HttpStatus.OK);
-		//}
-		
-		//return new ResponseEntity<String> ("Erreur lors de la suppression", HttpStatus.INTERNAL_SERVER_ERROR);
-		
+			
 	}
 	
 	
