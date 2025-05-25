@@ -38,7 +38,8 @@ public class PersonRepository {
 			Type personsListType = new TypeToken<List<Person>>() {}.getType();
 			List<Person> persons = gson.fromJson(personArray, personsListType);
 			personsSelect =	persons.stream()
-									.filter(p-> p.getFirstName().equals(firstName) && p.getLastName().equals(lastName))
+									.filter(p-> p.getFirstName().toUpperCase().equals(firstName.toUpperCase()) && 
+											p.getLastName().toUpperCase().equals(lastName.toUpperCase()))
 									.collect(Collectors.toList());
 		}	
 		
@@ -55,7 +56,7 @@ public class PersonRepository {
 			Type personsListType = new TypeToken<List<Person>>() {}.getType();
 			List<Person> persons = gson.fromJson(personArray, personsListType);
 			personsSelect =	persons.stream()
-									.filter(p-> p.getAddress().equals(address))
+									.filter(p-> p.getAddress().toUpperCase().equals(address.toUpperCase()))
 									.collect(Collectors.toList());
 		}
 		
@@ -109,7 +110,8 @@ public class PersonRepository {
 			Type personsListType = new TypeToken<List<Person>>() {}.getType();
 			List<Person> persons  = gson.fromJson(personArray, personsListType);
 			Optional<Person> personFound = persons.stream()
-								.filter(p -> p.getFirstName().equals(personUpdate.getFirstName()) && p.getLastName().equals(personUpdate.getLastName()))
+								.filter(p -> p.getFirstName().toUpperCase().equals(personUpdate.getFirstName().toUpperCase()) 
+										&& p.getLastName().toUpperCase().equals(personUpdate.getLastName().toUpperCase()))
 								.peek(p -> {p.setAddress(personUpdate.getAddress());
 											p.setCity(personUpdate.getCity());
 											p.setEmail(personUpdate.getEmail());
@@ -145,7 +147,8 @@ public class PersonRepository {
 			Type personsListType = new TypeToken<List<Person>>() {}.getType();
 			List<Person> persons  = gson.fromJson(personArray, personsListType);
 			List<Person> personsToKeep =  persons.stream()
-										.filter(p -> !(p.getFirstName().equals(firstName)) && !(p.getLastName().equals(lastName)))
+										.filter(p -> !(p.getFirstName().toUpperCase().equals(firstName.toUpperCase())) 
+												&& !(p.getLastName().toUpperCase().equals(lastName.toUpperCase())))
 										.toList();
 					
 			
@@ -170,7 +173,7 @@ public class PersonRepository {
 			Type personsListType = new TypeToken<List<Person>>() {}.getType();
 			List<Person> persons = gson.fromJson(personArray, personsListType);
 			personsSelect =	persons.stream()
-									.filter(p-> p.getLastName().equals(lastName))
+									.filter(p-> p.getLastName().toUpperCase().equals(lastName.toUpperCase()))
 									.collect(Collectors.toList());
 		}
 		
@@ -188,7 +191,7 @@ public class PersonRepository {
 			Type personsListType = new TypeToken<List<Person>>() {}.getType();
 			List<Person> persons = gson.fromJson(personArray, personsListType);
 			personsSelect =	persons.stream()
-									.filter(p-> p.getCity().equals(city))
+									.filter(p-> p.getCity().toUpperCase().equals(city.toUpperCase()))
 									.collect(Collectors.toList());
 		}
 		

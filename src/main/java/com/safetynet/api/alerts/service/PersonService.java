@@ -23,7 +23,6 @@ public class PersonService {
    
 	
 	public List<Person> getPersonByName(String lastName, String firstName) {
-		
 		return personRepository.getPersonByName(lastName, firstName);
 		
 	}

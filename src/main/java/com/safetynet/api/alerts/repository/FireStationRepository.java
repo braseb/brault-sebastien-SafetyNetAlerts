@@ -1,6 +1,5 @@
 package com.safetynet.api.alerts.repository;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,7 +80,7 @@ public class FireStationRepository {
 			List<FireStation> fireStations = gson.fromJson(firestationArray, typeListFirestation);
 			
 			firestationSelect = fireStations.stream()
-											.filter(f -> f.getAddress().equals(address))
+											.filter(f -> f.getAddress().toUpperCase().equals(address.toUpperCase()))
 											.toList();
 		
 		}
@@ -117,7 +116,7 @@ public class FireStationRepository {
 			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
 			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
 			fireStations.stream()
-					.filter(f -> f.getAddress().equals(address))
+					.filter(f -> f.getAddress().toUpperCase().equals(address.toUpperCase()))
 					.forEach(f -> f.setStation(stationNumber));
 					
 					
@@ -166,7 +165,7 @@ public class FireStationRepository {
 			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
 			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
 			List<FireStation> fireStationsToKeep =  fireStations.stream()
-										.filter(f -> !(f.getAddress().equals(address)))
+										.filter(f -> !(f.getAddress().toUpperCase().equals(address.toUpperCase())))
 										.toList();
 					
 			

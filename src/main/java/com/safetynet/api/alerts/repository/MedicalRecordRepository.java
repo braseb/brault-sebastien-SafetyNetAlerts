@@ -1,10 +1,8 @@
 package com.safetynet.api.alerts.repository;
 
 
-
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +31,7 @@ public class MedicalRecordRepository {
 	
 	public List<MedicalRecord> getAllMedicalRecord() {
 		JsonArray medicalRecordsArray = datas.getFileCache().getAsJsonArray("medicalrecords");
-		List<MedicalRecord> medicalRecords = Collections.emptyList();
+		List<MedicalRecord> medicalRecords = new ArrayList<MedicalRecord>();
 		if (medicalRecordsArray != null) {
 			Gson gson = new Gson();
 			Type typeListMedicalRecord = new TypeToken<List<MedicalRecord>>() {}.getType();
@@ -53,7 +51,8 @@ public class MedicalRecordRepository {
 			List<MedicalRecord> listMedicalRecord = gson.fromJson(medicalRecordsArray, typeListMedicalRecord);
 			
 			medicalRecordsSelect = listMedicalRecord.stream()
-														.filter(m -> m.getLastName().equals(lastName) && m.getFirstName().equals(firstName))
+														.filter(m -> m.getLastName().toUpperCase().equals(lastName.toUpperCase()) 
+																&& m.getFirstName().toUpperCase().equals(firstName.toUpperCase()))
 														.findFirst();
 			
 		}
@@ -91,7 +90,8 @@ public class MedicalRecordRepository {
 			Type medicalRecordListType = new TypeToken<List<MedicalRecord>>() {}.getType();
 			List<MedicalRecord> medicalRecords  = gson.fromJson(medicalRecordArray, medicalRecordListType);
 			medicalRecords.stream()
-					.filter(m -> m.getFirstName().equals(firstName) && m.getLastName().equals(lastName))
+					.filter(m -> m.getFirstName().toUpperCase().equals(firstName.toUpperCase()) 
+							&& m.getLastName().toUpperCase().equals(lastName.toUpperCase()))
 					.forEach(m -> {m.setBirthdate(medicalRecord.getBirthdate());
 									m.setMedications(medicalRecord.getMedications());
 									m.setAllergies(medicalRecord.getAllergies());});
@@ -117,7 +117,8 @@ public class MedicalRecordRepository {
 			Type medicalRecordListType = new TypeToken<List<MedicalRecord>>() {}.getType();
 			List<MedicalRecord> medicalRecords  = gson.fromJson(medicalRecordArray, medicalRecordListType);
 			List<MedicalRecord> medicalRecordsToKeep = medicalRecords.stream()
-										.filter(m -> !m.getFirstName().equals(firstName) && !m.getLastName().equals(lastName))
+										.filter(m -> !m.getFirstName().toUpperCase().equals(firstName.toUpperCase()) 
+												&& !m.getLastName().toUpperCase().equals(lastName.toUpperCase()))
 										.toList();
 			
 			JsonElement medicalRecordsJson = gson.toJsonTree(medicalRecordsToKeep);
