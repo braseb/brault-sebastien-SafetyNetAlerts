@@ -2,7 +2,9 @@ package com.safetynet.api.alerts.repository;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
+import com.safetynet.api.alerts.exceptions.EntityAlreadyExistException;
 import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
 import com.safetynet.api.alerts.model.Person;
 
@@ -86,15 +89,26 @@ public class PersonRepository {
 				
 		if (personArray != null){
 			Gson gson = new Gson();
+			Type personsListType = new TypeToken<List<Person>>() {}.getType();
+			List<Person> persons  = gson.fromJson(personArray, personsListType);
 			
+			boolean exist = persons.stream()
+							.anyMatch(p-> 
+									p.getFirstName().equalsIgnoreCase(personCreate.getFirstName()) && 
+									p.getLastName().equalsIgnoreCase(personCreate.getLastName()));
 			
-			JsonElement personJson = gson.toJsonTree(personCreate);
-			personArray.add(personJson);
-			datas.getFileCache().add("persons", personArray);
-			datas.writeJsonToFile();
-			person = personCreate;
+			if (!exist) {
+				JsonElement personJson = gson.toJsonTree(personCreate);
+				personArray.add(personJson);
+				datas.getFileCache().add("persons", personArray);
+				datas.writeJsonToFile();
+				person = personCreate;
+			}
 			
-			
+			else {
+				throw new EntityAlreadyExistException("The person already exist", Map.of("lastname", personCreate.getLastName(),
+																					"fistname", personCreate.getFirstName()));
+			}
 		}
 		
 		return person;
