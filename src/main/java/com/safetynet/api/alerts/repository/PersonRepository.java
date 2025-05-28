@@ -105,7 +105,7 @@ public class PersonRepository {
 			}
 			
 			else {
-				throw new EntityAlreadyExistException("The person already exist", Map.of("lastname", personCreate.getLastName(),
+				throw new EntityAlreadyExistException("Person already exist", Map.of("lastname", personCreate.getLastName(),
 																					"fistname", personCreate.getFirstName()));
 			}
 		}
@@ -130,9 +130,9 @@ public class PersonRepository {
 											p.setEmail(personUpdate.getEmail());
 											p.setPhone(personUpdate.getPhone());
 											p.setZip(personUpdate.getZip());})
-								.findAny();
+								.findFirst();
 								
-			if (!personFound.isPresent()) {
+			if (personFound.isEmpty()) {
 				throw new EntityNotFoundException("Person not found");
 				
 			}
@@ -142,8 +142,6 @@ public class PersonRepository {
 				datas.writeJsonToFile();
 				return personFound.get();
 			}
-			
-			
 			
 		}
 		

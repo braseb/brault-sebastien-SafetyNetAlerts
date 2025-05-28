@@ -1,17 +1,16 @@
 package com.safetynet.api.alerts.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class PersonCreateDto{
 	
-	private @NotBlank(message = "the lastName is necessary") @NotNull String lastName;
-	private @NotBlank @NotNull String firstName;
-	private @NotBlank @NotNull String address;
-	private @NotBlank @NotNull String city;
-	private @NotBlank @NotNull String zip;
-	private @NotBlank @NotNull String phone;
-	private @NotBlank @NotNull String email;
+	private @NotBlank(message = "the lastName is necessary") String lastName;
+	private @NotBlank(message = "the firstName is necessary") String firstName;
+	private @NotBlank  String address;
+	private @NotBlank  String city;
+	private @NotBlank  String zip;
+	private @NotBlank  String phone;
+	private @NotBlank  String email;
 	
 	
 	

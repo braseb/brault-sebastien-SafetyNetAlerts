@@ -1,6 +1,5 @@
 package com.safetynet.api.alerts.service;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +10,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.safetynet.api.alerts.exceptions.EntityAlreadyExistException;
+import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
 import com.safetynet.api.alerts.model.MedicalRecord;
+import com.safetynet.api.alerts.model.dto.MedicalRecordCreateDto;
+import com.safetynet.api.alerts.model.dto.MedicalRecordUpdateDto;
+import com.safetynet.api.alerts.model.dto.mapping.MedicalRecordMapping;
 import com.safetynet.api.alerts.repository.MedicalRecordRepository;
 
 
@@ -65,16 +70,33 @@ public class MedicalRecordService {
 		
 	}
 	
-	public boolean createMedicalRecord(MedicalRecord medicalRecord){		
-		return medicalRecordRepository.create(medicalRecord);
+	public MedicalRecordCreateDto createMedicalRecord(MedicalRecordCreateDto medicalRecordCreate){		
+		try {
+			MedicalRecord medicalRecord = MedicalRecordMapping.mapToMedicalRecord(medicalRecordCreate);
+			return MedicalRecordMapping.mapToMedicalRecordCreateDto(medicalRecordRepository.create(medicalRecord));
+		} catch (EntityAlreadyExistException e) {
+			throw e;
+		}
+		
 	}
 	
-	public boolean updateMedicalRecord(String lastName, String firstName, MedicalRecord medicalRecord){
-		return medicalRecordRepository.update(lastName,firstName,medicalRecord);
+	public MedicalRecordUpdateDto updateMedicalRecord(String lastName, String firstName, MedicalRecordUpdateDto medicalRecordUpdate){
+		try {
+			MedicalRecord medicalRecord = MedicalRecordMapping.mapToMedicalRecord(lastName, firstName, medicalRecordUpdate);
+			return MedicalRecordMapping.mapToMedicalRecordUpdateDto(medicalRecordRepository.update(medicalRecord));
+		} catch (EntityNotFoundException e) {
+			throw e;
+		}
+		
 	}
 	
-	public boolean removeMedicalRecord(String lastName, String firstName){
-		return medicalRecordRepository.remove(lastName, firstName);
+	public void removeMedicalRecord(String lastName, String firstName){
+		try {
+			medicalRecordRepository.remove(lastName, firstName);
+		} catch (EntityNotFoundException e) {
+			throw e;
+		}
+		
 	}
 	
 	

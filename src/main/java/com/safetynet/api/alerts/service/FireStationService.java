@@ -77,7 +77,7 @@ public class FireStationService {
 	public FireStationUpdateDto updateFireStation(String address, FireStationUpdateDto fireStationUpdate) {
 		try {
 			FireStation fireStation = FireStationMapping.mapToFireStation(address, fireStationUpdate);
-			return FireStationMapping.mapToFireStationUpdateDto(fireStationRepository.update(address,fireStation));
+			return FireStationMapping.mapToFireStationUpdateDto(fireStationRepository.update(fireStation));
 		} catch (EntityNotFoundException e) {
 			throw e;
 		}

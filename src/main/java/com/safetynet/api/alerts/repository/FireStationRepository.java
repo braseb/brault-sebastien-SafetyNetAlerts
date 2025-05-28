@@ -128,7 +128,7 @@ public class FireStationRepository {
 		return fireStationCreated;
 	}
 
-	public FireStation update(String address, FireStation fireStation) {
+	public FireStation update(FireStation fireStation) {
 		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
 				
 		if (fireStationArray != null){
@@ -137,7 +137,7 @@ public class FireStationRepository {
 			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
 			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
 			Optional<FireStation> fireStationFound = fireStations.stream()
-													.filter(f -> f.getAddress().equalsIgnoreCase(address.toUpperCase()))
+													.filter(f -> f.getAddress().equalsIgnoreCase(fireStation.getAddress()))
 													.peek(f -> f.setStation(fireStation.getStation()))
 													.findAny();
 								

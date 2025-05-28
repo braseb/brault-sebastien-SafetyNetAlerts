@@ -27,15 +27,14 @@ public class FireStationMapping {
 		FireStation fireStation = new FireStation();
 		fireStation.setStation(fireStationUpdate.stationNumber());
 		fireStation.setAddress(address);
-		
-		
+				
 		return fireStation;
 	}
 	
 	public static FireStationUpdateDto mapToFireStationUpdateDto(FireStation fireStation) {
 		FireStationUpdateDto fireStationUpdate = new FireStationUpdateDto(															
 															fireStation.getStation());
-
+		
 		return fireStationUpdate;
 	}
 }

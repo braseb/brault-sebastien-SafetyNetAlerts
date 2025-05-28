@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.safetynet.api.alerts.model.MedicalRecord;
+import com.safetynet.api.alerts.model.dto.MedicalRecordCreateDto;
+import com.safetynet.api.alerts.model.dto.MedicalRecordUpdateDto;
 import com.safetynet.api.alerts.service.MedicalRecordService;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -20,49 +21,29 @@ public class MedicalRecordController {
 	
 	@PostMapping("/medicalRecord")
 	@Operation(summary = "Create a new medical record")
-	public ResponseEntity<String> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
-		boolean created = medicalRecordService.createMedicalRecord(medicalRecord);
-		if (created) {
-			return new ResponseEntity<String> ("Medical record created", HttpStatus.CREATED);
-		}
-		
-		return new ResponseEntity<String> ("Medical record not created", HttpStatus.BAD_REQUEST);
+	public ResponseEntity<MedicalRecordCreateDto> createMedicalRecord(@RequestBody MedicalRecordCreateDto medicalRecord) {
+		MedicalRecordCreateDto medicalRecordCreated = medicalRecordService.createMedicalRecord(medicalRecord);
+		return new ResponseEntity<MedicalRecordCreateDto>(medicalRecordCreated, HttpStatus.CREATED);
 		
 	}
 	
 	@PutMapping("/medicalRecord/{lastName}/{firstName}")
 	@Operation(summary = "Update a medical record")
-	public ResponseEntity<String> updateMedicalRecord(@PathVariable String lastName, @PathVariable String firstName, @RequestBody MedicalRecord medicalRecordNew) {
-		MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(lastName,firstName);
-		
-		if (medicalRecord.getLastName().isEmpty() &&  medicalRecord.getFirstName().isEmpty()) {
-			return new ResponseEntity<String> ("Medical record not found", HttpStatus.NOT_FOUND);
-		}
-		
-		boolean updated = medicalRecordService.updateMedicalRecord(lastName,firstName, medicalRecordNew);
-				
-		if (updated) {
-			return new ResponseEntity<String> ("Medical record updated", HttpStatus.OK);
-		}
-		
-		return new ResponseEntity<String> ("Datas invalids", HttpStatus.BAD_REQUEST);
+	public ResponseEntity<MedicalRecordUpdateDto> updateMedicalRecord(@PathVariable String lastName, @PathVariable String firstName, @RequestBody MedicalRecordUpdateDto medicalRecordUpdate) {
+		MedicalRecordUpdateDto medicalRecordUpdated =  medicalRecordService.updateMedicalRecord(lastName,
+																								firstName, 
+																								medicalRecordUpdate);
+			
+		return ResponseEntity.ok(medicalRecordUpdated);
 	}
 	
 	@DeleteMapping("/medicalRecord/{lastName}/{firstName}")
 	@Operation(summary = "Delete a medical record")
 	public ResponseEntity<String> removeMedicalRecord(@PathVariable String lastName, @PathVariable String firstName){
-		MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(lastName, firstName);
-		if (medicalRecord.getLastName().isEmpty() &&  medicalRecord.getFirstName().isEmpty()) {
-			return new ResponseEntity<String> ("Medical record not found", HttpStatus.NOT_FOUND);
-		}
-		boolean removed = medicalRecordService.removeMedicalRecord(lastName, firstName);
-							
+		medicalRecordService.removeMedicalRecord(lastName, firstName);
+		return ResponseEntity.noContent().build();			
 		
-		if (removed) {
-			return new ResponseEntity<String> ("The Medical record has been removed", HttpStatus.NO_CONTENT);
-		}
 		
-		return new ResponseEntity<String> ("Error removing", HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	}
 }

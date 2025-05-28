@@ -2,11 +2,11 @@ package com.safetynet.api.alerts.model.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
 
 public class FireStationCreateDto{
 	
-	private @NotBlank(message = "the address is necessary") @NotNull String address;
+	private @NotBlank(message = "the address is necessary") String address;
 	private @Min(value = 1) int stationNumber;
 		
 	public FireStationCreateDto(String address,
