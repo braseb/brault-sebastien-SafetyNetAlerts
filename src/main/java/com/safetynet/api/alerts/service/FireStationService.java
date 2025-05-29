@@ -55,7 +55,7 @@ public class FireStationService {
 		System.out.println(listFireStation);
 		Optional<Integer> stationNumber  = listFireStation.stream()
 												.map(f -> f.getStation())
-												.findFirst();
+												.findAny();
 		if (stationNumber.isEmpty()) {
 			throw new EntityNotFoundExceptionWithReturn("Fire station number not found", address);
 		}

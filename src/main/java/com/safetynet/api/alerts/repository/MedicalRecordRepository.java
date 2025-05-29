@@ -55,8 +55,8 @@ public class MedicalRecordRepository {
 			List<MedicalRecord> listMedicalRecord = gson.fromJson(medicalRecordsArray, typeListMedicalRecord);
 			
 			medicalRecordsSelect = listMedicalRecord.stream()
-														.filter(m -> m.getLastName().toUpperCase().equals(lastName.toUpperCase()) 
-																&& m.getFirstName().toUpperCase().equals(firstName.toUpperCase()))
+														.filter(m -> m.getLastName().equalsIgnoreCase(lastName) 
+																&& m.getFirstName().equalsIgnoreCase(firstName))
 														.findFirst();
 			
 		}
@@ -137,8 +137,8 @@ public class MedicalRecordRepository {
 			Type medicalRecordListType = new TypeToken<List<MedicalRecord>>() {}.getType();
 			List<MedicalRecord> medicalRecords  = gson.fromJson(medicalRecordArray, medicalRecordListType);
 			List<MedicalRecord> medicalRecordsToKeep = medicalRecords.stream()
-										.filter(m -> !m.getFirstName().toUpperCase().equals(firstName.toUpperCase()) 
-												&& !m.getLastName().toUpperCase().equals(lastName.toUpperCase()))
+										.filter(m -> !m.getFirstName().equalsIgnoreCase(firstName) 
+												|| !m.getLastName().equalsIgnoreCase(lastName))
 										.toList();
 			
 			if (medicalRecords.size() != medicalRecordsToKeep.size()) {

@@ -86,7 +86,7 @@ public class FireStationRepository {
 			List<FireStation> fireStations = gson.fromJson(fireStationArray, typeListFirestation);
 			
 			fireStationSelect = fireStations.stream()
-											.filter(f -> f.getAddress().toUpperCase().equals(address.toUpperCase()))
+											.filter(f -> f.getAddress().equalsIgnoreCase(address))
 											.toList();
 			
 			
@@ -141,7 +141,7 @@ public class FireStationRepository {
 													.peek(f -> f.setStation(fireStation.getStation()))
 													.findAny();
 								
-			if (!fireStationFound.isPresent()) {
+			if (fireStationFound.isEmpty()) {
 				throw new EntityNotFoundException("Fire station not found");
 				
 			}
@@ -191,7 +191,7 @@ public class FireStationRepository {
 			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
 			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
 			List<FireStation> fireStationsToKeep =  fireStations.stream()
-										.filter(f -> !(f.getAddress().toUpperCase().equals(address.toUpperCase())))
+										.filter(f -> !(f.getAddress().equalsIgnoreCase(address)))
 										.toList();
 			
 			if(fireStations.size() != fireStationsToKeep.size()) {
