@@ -30,7 +30,7 @@ public class FireStationService {
 												.map(f -> f.getAddress())
 												.collect(Collectors.toList());
 		if (address.isEmpty()) {
-			throw new EntityNotFoundExceptionWithReturn("Address not found with this station number", stationnumber);
+			throw new EntityNotFoundExceptionWithReturn("No Address found with this station number", stationnumber);
 		}
 		
 		return address;

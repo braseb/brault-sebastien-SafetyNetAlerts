@@ -13,6 +13,7 @@ import com.safetynet.api.alerts.model.dto.MedicalRecordCreateDto;
 import com.safetynet.api.alerts.model.dto.MedicalRecordUpdateDto;
 import com.safetynet.api.alerts.service.MedicalRecordService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 public class MedicalRecordController {
@@ -21,7 +22,7 @@ public class MedicalRecordController {
 	
 	@PostMapping("/medicalRecord")
 	@Operation(summary = "Create a new medical record")
-	public ResponseEntity<MedicalRecordCreateDto> createMedicalRecord(@RequestBody MedicalRecordCreateDto medicalRecord) {
+	public ResponseEntity<MedicalRecordCreateDto> createMedicalRecord(@Valid @RequestBody MedicalRecordCreateDto medicalRecord) {
 		MedicalRecordCreateDto medicalRecordCreated = medicalRecordService.createMedicalRecord(medicalRecord);
 		return new ResponseEntity<MedicalRecordCreateDto>(medicalRecordCreated, HttpStatus.CREATED);
 		
@@ -29,7 +30,7 @@ public class MedicalRecordController {
 	
 	@PutMapping("/medicalRecord/{lastName}/{firstName}")
 	@Operation(summary = "Update a medical record")
-	public ResponseEntity<MedicalRecordUpdateDto> updateMedicalRecord(@PathVariable String lastName, @PathVariable String firstName, @RequestBody MedicalRecordUpdateDto medicalRecordUpdate) {
+	public ResponseEntity<MedicalRecordUpdateDto> updateMedicalRecord(@PathVariable String lastName, @PathVariable String firstName, @Valid @RequestBody MedicalRecordUpdateDto medicalRecordUpdate) {
 		MedicalRecordUpdateDto medicalRecordUpdated =  medicalRecordService.updateMedicalRecord(lastName,
 																								firstName, 
 																								medicalRecordUpdate);

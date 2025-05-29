@@ -90,7 +90,14 @@ public class AlertService {
 									.thenComparing(p -> ((PersonMiniWithPhoneDto) p).getFirstName()));
 		//number of child and adult
 		Map<Boolean, List<PersonMiniWithPhoneDto>> part = personMiniWithPhoneDto.stream()
-				.collect(Collectors.partitioningBy(p -> medicalRecordService.getAge(p.getLastName(), p.getFirstName()) <= 18));
+				.collect(Collectors.partitioningBy(p -> {Integer age = medicalRecordService.getAge(p.getLastName(), p.getFirstName());
+														if (age == null) {
+															return false;
+														}
+															else{
+																return age <= 18;
+															}
+														}));
 																
 		fireStationDto.setPersons(personMiniWithPhoneDto);
 		fireStationDto.setNumberChild(part.get(true).size());

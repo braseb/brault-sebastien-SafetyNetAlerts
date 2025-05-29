@@ -10,7 +10,7 @@ public class MedicalRecordCreateDto{
 	
 	private @NotBlank(message = "the lastName is necessary") String lastName;
 	private @NotBlank(message = "the firstName is necessary") String firstName;
-	private @NotBlank  @Pattern(regexp = "^\\d\\d/\\d\\d/\\d{4}$", message = "The date must be to this format MM-dd-yyyy") String birthdate;
+	private @NotBlank  @Pattern(regexp = "^\\d\\d/\\d\\d/\\d{4}$", message = "The date must be to this format MM/dd/yyyy") String birthdate;
 	private @NotNull List<String> medications;
 	private @NotNull List<String> allergies;
 

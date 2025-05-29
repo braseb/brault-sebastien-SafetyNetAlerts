@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -26,7 +25,7 @@ import jakarta.validation.ConstraintViolationException;
 public class ApiExceptionHandler {
 	
 	
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	//@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<Map<String, Object>> handleNotFoundEntity(EntityNotFoundException ex, HttpServletRequest request){
 		Map<String, Object> body = new HashMap<String, Object>();

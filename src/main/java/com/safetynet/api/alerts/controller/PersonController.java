@@ -5,16 +5,13 @@ package com.safetynet.api.alerts.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safetynet.api.alerts.exceptions.EntityAlreadyExistException;
 import com.safetynet.api.alerts.model.dto.PersonCreateDto;
 import com.safetynet.api.alerts.model.dto.PersonUpdateDto;
 import com.safetynet.api.alerts.service.PersonService;
@@ -51,16 +48,15 @@ public class PersonController {
 	    		responseCode = "400", 
 	    		description = "Invalid input", 
 	    		content = @Content(
-	            mediaType = "application/json",
-	            schema = @Schema(implementation = MethodArgumentNotValidException.class)
-	        )),
+	            mediaType = "application/json")
+	            
+	        ),
 	    @ApiResponse(
 	    		responseCode = "409", 
 	    		description = "Person already exist", 
 	    		content = @Content(
-	            mediaType = "application/json",
-	            schema = @Schema(implementation = EntityAlreadyExistException.class)
-	        )),
+	            mediaType = "application/json")
+	    	),
 	})
 	
 	@Operation(summary = "Create a new person")
@@ -71,6 +67,29 @@ public class PersonController {
 	}
 	
 	@PutMapping("/person/{lastName}/{firstName}")
+	@ApiResponses({
+	    @ApiResponse(
+	        responseCode = "200",
+	        description = "Person updated successfully",
+	        content = @Content(
+	            mediaType = "application/json",
+	            schema = @Schema(implementation = PersonUpdateDto.class)
+	        )
+	    ),
+	    @ApiResponse(
+	    		responseCode = "400", 
+	    		description = "Invalid input", 
+	    		content = @Content(
+	            mediaType = "application/json")
+	            
+	        ),
+	    @ApiResponse(
+	    		responseCode = "404", 
+	    		description = "Person not found", 
+	    		content = @Content(
+	            mediaType = "application/json")
+	    	),
+	})
 	@Operation(summary = "Update a person")
 	public ResponseEntity<PersonUpdateDto> updatePerson(@PathVariable String lastName, @PathVariable String firstName, @Valid  @RequestBody PersonUpdateDto personToUpdate) {
 		
@@ -80,6 +99,20 @@ public class PersonController {
 	}
 	
 	@DeleteMapping("/person/{lastName}/{firstName}")
+	@ApiResponses({
+	    @ApiResponse(
+	        responseCode = "204",
+	        description = "Person deleted successfully",
+	        content = @Content
+	        
+	    ),
+	    @ApiResponse(
+	    		responseCode = "404", 
+	    		description = "Person not found", 
+	    		content = @Content(
+	            mediaType = "application/json")
+	    	),
+	})
 	@Operation(summary = "Delete a person")
 	public ResponseEntity<?> removePerson(@PathVariable String lastName, @PathVariable String firstName){
 		personService.removePerson(lastName, firstName);
