@@ -6,6 +6,17 @@ import org.springframework.stereotype.Component;
 public class FireStation {
 	String address;
 	Integer station;
+	
+	public FireStation() {
+		
+	}
+	
+	public FireStation(String address, Integer station) {
+		super();
+		this.address = address;
+		this.station = station;
+	}
+	
 	public String getAddress() {
 		return address;
 	}

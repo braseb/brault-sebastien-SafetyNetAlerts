@@ -50,7 +50,7 @@ public class AlertService {
 			List<MemberHouseholdDto> members = new ArrayList<MemberHouseholdDto>();
 						
 			Integer age = medicalRecordService.getAge(person.getLastName(), person.getFirstName());
-			if (age.intValue() <= 18 && age != null) {
+			if (age != null && age.intValue() <= 18 ) {
 				ChildAlertDto childDto = new ChildAlertDto(person.getLastName(), person.getFirstName(), age, members);
 				
 				persons.stream()

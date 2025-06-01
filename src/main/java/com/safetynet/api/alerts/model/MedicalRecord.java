@@ -7,11 +7,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MedicalRecord {
-	String firstName;
 	String lastName;
+	String firstName;
 	String birthdate;
 	List<String> medications;
 	List<String> allergies;
+	
+	public MedicalRecord() {
+		
+	}
+	
+	public MedicalRecord(String lastName, String firstName, String birthdate, List<String> medications,
+			List<String> allergies) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.birthdate = birthdate;
+		this.medications = medications;
+		this.allergies = allergies;
+	}
 	
 	public String getFirstName() {
 		return firstName;

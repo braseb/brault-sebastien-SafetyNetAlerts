@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -18,14 +19,16 @@ import com.safetynet.api.alerts.exceptions.JsonDataException;
 public class JsonDatas {
 	private final Logger log = LogManager.getLogger();
 	
-	private final String fileJsonPath = "./datas/data.json";
+	//private final String fileJsonPath = "./datas/data.json";
+	private final String fileJsonPath;
 	private JsonObject fileCache;
 	
-	public JsonDatas()  {
+	public JsonDatas(@Value("${json.data.path}") String fileJsonPath)  {
+		this.fileJsonPath = fileJsonPath;
 		try {
 			JsonReader reader = new JsonReader(new FileReader(fileJsonPath));
 			fileCache = JsonParser.parseReader(reader).getAsJsonObject();
-			log.info("Fichier json correctement chargé");
+			log.info("Json file successfully loaded");
 			reader.close();
 		} catch (IOException e) {
 			log.error("Failed to read the data.json file",e);
@@ -48,7 +51,7 @@ public class JsonDatas {
 		try {
 			FileWriter filewriter = new FileWriter(fileJsonPath);
 			gson.toJson(fileCache, filewriter);
-			log.info("Fichier json correctement enregistré");
+			log.info("Json file successfully saved");
 			filewriter.close();
 						
 		} catch (IOException e) {

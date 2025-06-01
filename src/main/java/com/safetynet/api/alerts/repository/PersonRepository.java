@@ -67,21 +67,6 @@ public class PersonRepository {
 		return personsSelect;
 	}
 	
-	
-	
-	public List<Person> getAllPerson(){
-		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
-		List<Person> persons = new ArrayList<Person>();
-		
-		if (personArray != null){
-			Gson gson = new Gson();
-			Type personsListType = new TypeToken<List<Person>>() {}.getType();
-			persons = gson.fromJson(personArray, personsListType);
-		}
-				
-		return persons;
-	}
-
 	public Person create(Person personCreate) {
 		JsonArray personArray = datas.getFileCache().getAsJsonArray("persons");
 		Person person = null;
