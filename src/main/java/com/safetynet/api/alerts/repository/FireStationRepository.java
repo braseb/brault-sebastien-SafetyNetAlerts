@@ -6,16 +6,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.safetynet.api.alerts.datas.JsonDatas;
 import com.safetynet.api.alerts.exceptions.EntityAlreadyExistException;
 import com.safetynet.api.alerts.exceptions.EntityNotFoundException;
+import com.safetynet.api.alerts.exceptions.JsonDataException;
 import com.safetynet.api.alerts.model.FireStation;
 
 
@@ -26,38 +30,66 @@ public class FireStationRepository {
 	@Autowired
 	private JsonDatas datas;
 	
-	public List<FireStation> getStationByStationNumber(int stationNumber) {
-		List<FireStation> firestationSelect = new ArrayList<FireStation>();
-		JsonArray firestationArray = datas.getFileCache().getAsJsonArray("firestations");
-				
-		if (firestationArray != null) {
-			
-			Gson gson = new Gson();
-			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
-			List<FireStation> fireStations = gson.fromJson(firestationArray, typeListFirestation);
-			
-			firestationSelect = fireStations.stream()
-										.filter(f -> f.getStation() == stationNumber)
-										.toList();
-			
-			
+	private final Logger log = LogManager.getLogger();
+	
+	private List<FireStation> getDatasFromJson() {
+		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
+		if (fireStationArray != null) {
+			try {
+				Gson gson = new Gson();
+				Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
+				List<FireStation> fireStations = gson.fromJson(fireStationArray, typeListFirestation);
+				return fireStations;
+			} catch (Exception e) {
+				log.error("Unable to convert the fireStations key to list", e, fireStationArray);
+				throw new JsonDataException("Unable to get fireStation datas");
+			}
+		}
+		else {
+			log.error("Unable to get the fireStations key", fireStationArray);
+			throw new JsonDataException("Unable to get fireStation datas");
 			
 		}
 		
+	}
+	
+	private void setDatasFromJson(List<FireStation> fireStations) {
+		Gson gson = new Gson();
+		JsonObject jsonCache = datas.getFileCache();
+		if (jsonCache != null) {
+			try {
+				JsonElement fireStationsJson = gson.toJsonTree(fireStations);
+				jsonCache.add("firestations", fireStationsJson);
+				datas.writeJsonToFile();
+			} catch (Exception e) {
+				log.error("Unable to set fireStation datas", e);
+				throw new JsonDataException("Unable to set fireStations key");
+			}
+			
+		}
+		else {
+			log.error("Unable to get the json cache", jsonCache);
+			throw new JsonDataException("Unable to set fireStation datas");
+			
+		}
+		
+	}
+	
+	public List<FireStation> getStationByStationNumber(int stationNumber) {
+		List<FireStation> firestationSelect = new ArrayList<FireStation>();
+		List<FireStation> fireStations = getDatasFromJson();
+			
+		firestationSelect = fireStations.stream()
+									.filter(f -> f.getStation() == stationNumber)
+									.toList();
 				
 		return firestationSelect;
 	}
 	
 	public List<FireStation> getStationByListOfStationNumber(List<Integer> stationNumbers) {
 		List<FireStation> firestationSelect = new ArrayList<FireStation>();
-		JsonArray firestationArray = datas.getFileCache().getAsJsonArray("firestations");
-		System.out.println(firestationSelect);
-				
-		if (firestationArray != null) {
-			
-			Gson gson = new Gson();
-			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
-			List<FireStation> fireStations = gson.fromJson(firestationArray, typeListFirestation);
+		
+			List<FireStation> fireStations = getDatasFromJson();
 						
 			for (Integer stationNumber : stationNumbers) {
 				List<FireStation> firestationThisSelect = fireStations.stream()
@@ -66,95 +98,64 @@ public class FireStationRepository {
 								
 				firestationSelect.addAll(firestationThisSelect);
 			}
-			
-			
-			
-			
-		}
-		
 				
 		return firestationSelect;
 	}
 
 	public List<FireStation> getStationNumberByAddress(String address) {
 		List<FireStation> fireStationSelect = new ArrayList<FireStation>();
-		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
-		if (fireStationArray != null) {
-					
-			Gson gson = new Gson();
-			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
-			List<FireStation> fireStations = gson.fromJson(fireStationArray, typeListFirestation);
+		List<FireStation> fireStations = getDatasFromJson();
 			
 			fireStationSelect = fireStations.stream()
 											.filter(f -> f.getAddress().equalsIgnoreCase(address))
 											.toList();
-			
-			
-		
-		}
 	
 		return fireStationSelect;
 	}
 
 	public FireStation create(FireStation fireStation) {
-		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
 		FireStation fireStationCreated = null;
 				
-		if (fireStationArray != null){
-			Gson gson = new Gson();
-			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
-			List<FireStation> fireStations = gson.fromJson(fireStationArray, typeListFirestation);
+		List<FireStation> fireStations = getDatasFromJson();
 			
-			boolean exist = fireStations.stream()
-										.anyMatch(f-> 
-							f.getAddress().equalsIgnoreCase(fireStation.getAddress()) && 
-							f.getStation() == (fireStation.getStation()));
-	
-			if (!exist) {
-				JsonElement fireStationJson = gson.toJsonTree(fireStation);
-				fireStationArray.add(fireStationJson);
-				datas.getFileCache().add("firestations", fireStationArray);
-				datas.writeJsonToFile();
-				fireStationCreated = fireStation;
-				
-			}
-			else {
-				throw new EntityAlreadyExistException("The fire station already exist", Map.of("address", fireStation.getAddress(),
-																					"stationNumber", fireStation.getStation()));
-			}
+		boolean exist = fireStations.stream()
+									.anyMatch(f-> 
+						f.getAddress().equalsIgnoreCase(fireStation.getAddress()) && 
+						f.getStation() == (fireStation.getStation()));
+
+		if (!exist) {
+			//JsonElement fireStationJson = gson.toJsonTree(fireStation);
+			//fireStationArray.add(fireStationJson);
+			//datas.getFileCache().add("firestations", fireStationArray);
+			//datas.writeJsonToFile();
+			fireStations.add(fireStation);
+			setDatasFromJson(fireStations);
+			fireStationCreated = fireStation;
 			
 		}
-		
+		else {
+			throw new EntityAlreadyExistException("The fire station already exist", Map.of("address", fireStation.getAddress(),
+																				"stationNumber", fireStation.getStation()));
+		}
+	
 		return fireStationCreated;
 	}
 
 	public FireStation update(FireStation fireStation) {
-		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
-				
-		if (fireStationArray != null){
-			Gson gson = new Gson();
-			
-			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
-			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
-			Optional<FireStation> fireStationFound = fireStations.stream()
-													.filter(f -> f.getAddress().equalsIgnoreCase(fireStation.getAddress()))
-													.peek(f -> f.setStation(fireStation.getStation()))
-													.findAny();
-								
-			if (fireStationFound.isEmpty()) {
-				throw new EntityNotFoundException("Fire station not found");
-				
-			}
-			else {
-				JsonElement fireStationJson = gson.toJsonTree(fireStations);
-				datas.getFileCache().add("firestations", fireStationJson);
-				datas.writeJsonToFile();
-				return fireStationFound.get();
-			}
+		List<FireStation> fireStations = getDatasFromJson();
+		Optional<FireStation> fireStationFound = fireStations.stream()
+												.filter(f -> f.getAddress().equalsIgnoreCase(fireStation.getAddress()))
+												.peek(f -> f.setStation(fireStation.getStation()))
+												.findAny();
+							
+		if (fireStationFound.isEmpty()) {
+			throw new EntityNotFoundException("Fire station not found");
 			
 		}
-		
-		return null;
+		else {
+			setDatasFromJson(fireStations);
+			return fireStationFound.get();
+		}
 	}
 	
 	public void remove(Integer stationNumber){
@@ -170,9 +171,7 @@ public class FireStationRepository {
 										.toList();
 					
 			if(fireStations.size() != fireStationsToKeep.size()) {
-				JsonElement fireStationJson = gson.toJsonTree(fireStationsToKeep);
-				datas.getFileCache().add("firestations", fireStationJson);
-				datas.writeJsonToFile();
+				setDatasFromJson(fireStationsToKeep);
 			}
 			else {
 				throw new EntityNotFoundException("Fire station not found");
@@ -195,9 +194,7 @@ public class FireStationRepository {
 										.toList();
 			
 			if(fireStations.size() != fireStationsToKeep.size()) {
-				JsonElement fireStationJson = gson.toJsonTree(fireStationsToKeep);
-				datas.getFileCache().add("firestations", fireStationJson);
-				datas.writeJsonToFile();
+				setDatasFromJson(fireStationsToKeep);
 			}
 			else {
 				throw new EntityNotFoundException("Fire station not found");
