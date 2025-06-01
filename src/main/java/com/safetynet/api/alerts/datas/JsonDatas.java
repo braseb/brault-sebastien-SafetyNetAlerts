@@ -1,6 +1,5 @@
 package com.safetynet.api.alerts.datas;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.safetynet.api.alerts.exceptions.JsonDataException;
 
 @Component
 public class JsonDatas {
@@ -21,11 +21,17 @@ public class JsonDatas {
 	private final String fileJsonPath = "./datas/data.json";
 	private JsonObject fileCache;
 	
-	public JsonDatas() throws IOException, FileNotFoundException {
-		JsonReader reader = new JsonReader(new FileReader(fileJsonPath));
-		fileCache = JsonParser.parseReader(reader).getAsJsonObject();
-		log.info("Fichier json correctement chargé");
-		reader.close();
+	public JsonDatas()  {
+		try {
+			JsonReader reader = new JsonReader(new FileReader(fileJsonPath));
+			fileCache = JsonParser.parseReader(reader).getAsJsonObject();
+			log.info("Fichier json correctement chargé");
+			reader.close();
+		} catch (IOException e) {
+			log.error("Failed to read the data.json file",e);
+			throw new JsonDataException("Unable to read the datas");
+		}
+		
 	}
 
 	public JsonObject getFileCache() {
@@ -36,22 +42,21 @@ public class JsonDatas {
 		this.fileCache = fileCache;
 	}
 	
-	public boolean writeJsonToFile() {
+	public void writeJsonToFile() {
 		Gson gson = new Gson();
-		boolean ret = false;
-		
+				
 		try {
 			FileWriter filewriter = new FileWriter(fileJsonPath);
 			gson.toJson(fileCache, filewriter);
 			log.info("Fichier json correctement enregistré");
 			filewriter.close();
-			ret = true;
-			
+						
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Failed to write the data.json file",e);
+			throw new JsonDataException("Unable to update the datas");
 		}
 		
-		return ret;
+		
 		
 	}
 		
