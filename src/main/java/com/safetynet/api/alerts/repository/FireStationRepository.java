@@ -89,15 +89,15 @@ public class FireStationRepository {
 	public List<FireStation> getStationByListOfStationNumber(List<Integer> stationNumbers) {
 		List<FireStation> firestationSelect = new ArrayList<FireStation>();
 		
-			List<FireStation> fireStations = getDatasFromJson();
-						
-			for (Integer stationNumber : stationNumbers) {
-				List<FireStation> firestationThisSelect = fireStations.stream()
-															.filter(f -> f.getStation() == stationNumber.intValue())
-															.toList();
-								
-				firestationSelect.addAll(firestationThisSelect);
-			}
+		List<FireStation> fireStations = getDatasFromJson();
+					
+		for (Integer stationNumber : stationNumbers) {
+			List<FireStation> firestationThisSelect = fireStations.stream()
+														.filter(f -> f.getStation() == stationNumber.intValue())
+														.toList();
+							
+			firestationSelect.addAll(firestationThisSelect);
+		}
 				
 		return firestationSelect;
 	}
@@ -159,47 +159,31 @@ public class FireStationRepository {
 	}
 	
 	public void remove(Integer stationNumber){
-		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
+		List<FireStation> fireStations = getDatasFromJson();
+		List<FireStation> fireStationsToKeep =  fireStations.stream()
+									.filter(f -> !(f.getStation().equals(stationNumber)))
+									.toList();
 				
-		if (fireStationArray != null){
-			Gson gson = new Gson();
-			
-			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
-			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
-			List<FireStation> fireStationsToKeep =  fireStations.stream()
-										.filter(f -> !(f.getStation().equals(stationNumber)))
-										.toList();
-					
-			if(fireStations.size() != fireStationsToKeep.size()) {
-				setDatasFromJson(fireStationsToKeep);
-			}
-			else {
-				throw new EntityNotFoundException("Fire station not found");
-			}
-			
+		if(fireStations.size() != fireStationsToKeep.size()) {
+			setDatasFromJson(fireStationsToKeep);
+		}
+		else {
+			throw new EntityNotFoundException("Fire station not found");
 		}
 		
 	}
 
 	public void remove(String address) {
-		JsonArray fireStationArray = datas.getFileCache().getAsJsonArray("firestations");
-				
-		if (fireStationArray != null){
-			Gson gson = new Gson();
-			
-			Type typeListFirestation = new TypeToken<List<FireStation>>() {}.getType();
-			List<FireStation> fireStations  = gson.fromJson(fireStationArray, typeListFirestation);
-			List<FireStation> fireStationsToKeep =  fireStations.stream()
-										.filter(f -> !(f.getAddress().equalsIgnoreCase(address)))
-										.toList();
-			
-			if(fireStations.size() != fireStationsToKeep.size()) {
-				setDatasFromJson(fireStationsToKeep);
-			}
-			else {
-				throw new EntityNotFoundException("Fire station not found");
-			}
-			
+		List<FireStation> fireStations = getDatasFromJson();
+		List<FireStation> fireStationsToKeep =  fireStations.stream()
+									.filter(f -> !(f.getAddress().equalsIgnoreCase(address)))
+									.toList();
+		
+		if(fireStations.size() != fireStationsToKeep.size()) {
+			setDatasFromJson(fireStationsToKeep);
+		}
+		else {
+			throw new EntityNotFoundException("Fire station not found");
 		}
 		
 	}
