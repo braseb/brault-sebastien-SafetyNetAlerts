@@ -95,6 +95,50 @@ public class PersonControllerIT {
 	}
 	
 	@Test
+	public void createPersonAlreadyExistTest() throws Exception {
+		
+		Gson gson = new Gson();
+		
+		Person newPerson = new Person("toto", 
+										"tata", 
+										"my address3", 
+										"city", 
+										"37000", 
+										"2222", 
+										"mail3@mail.com");
+		PersonCreateDto newPersonDto = PersonMapping.mapToPersonCreateDto(newPerson);
+		
+		String json = gson.toJson(newPersonDto);
+		mockMvc.perform(post("/person")
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isConflict());
+	}
+	
+	@Test
+	public void createPersonNotValidTest() throws Exception {
+		
+		Gson gson = new Gson();
+		
+		Person newPerson = new Person("testLastName", 
+										"testFirstName", 
+										"my address3", 
+										"city", 
+										"37000", 
+										"2222",
+										"");
+		PersonCreateDto newPersonDto = PersonMapping.mapToPersonCreateDto(newPerson);
+		
+		String json = gson.toJson(newPersonDto);
+		mockMvc.perform(post("/person")
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
 	public void updatePersonTest() throws Exception {
 		Gson gson = new Gson();
 		
@@ -119,6 +163,28 @@ public class PersonControllerIT {
 	}
 	
 	@Test
+	public void updatePersonNotFoundTest() throws Exception {
+		Gson gson = new Gson();
+		
+		Person updatePerson = new Person("", 
+										"", 
+										"my address3", 
+										"city", 
+										"37000", 
+										"2222", 
+										"mail3@mail.com");
+		PersonUpdateDto updatePersonDto = PersonMapping.mapToPersonUpdateDto(updatePerson);
+				
+		String json = gson.toJson(updatePersonDto);
+		
+		mockMvc.perform(put("/person/{lastName}/{firstName}", "lastNameNotFound", "firstNameNotFound")
+					.content(json)
+					.contentType(MediaType.APPLICATION_JSON))
+					.andDo(print())
+					.andExpect(status().isNotFound());
+	}
+	
+	@Test
 	public void removePersonTest() throws Exception {
 				
 		mockMvc.perform(delete("/person/{lastName}/{firstName}", "toto", "tata"))
@@ -128,8 +194,14 @@ public class PersonControllerIT {
 		mockMvc.perform(delete("/person/{lastName}/{firstName}", "toto", "tata"))
 					.andDo(print())
 					.andExpect(status().isNotFound());
-		
-		
+	}
+	
+	@Test
+	public void removePersonNotFoundTest() throws Exception {
+				
+		mockMvc.perform(delete("/person/{lastName}/{firstName}", "lastNameNotFound", "firstNameNotFound"))
+					.andDo(print())
+					.andExpect(status().isNotFound());
 	}
 			
 }

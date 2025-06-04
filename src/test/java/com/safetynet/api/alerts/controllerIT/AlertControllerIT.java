@@ -2,6 +2,7 @@ package com.safetynet.api.alerts.controllerIT;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -86,7 +87,18 @@ public class AlertControllerIT {
         when(jsonDatas.getFileCache()).thenReturn(mockJson);
         
 	}
-		
+	
+	@Test
+	public void getUrlNotFoundTest() throws Exception {
+		mockMvc.perform(get("/unknownUrl"))
+		.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void noAllowedMethodTest() throws Exception {
+		mockMvc.perform(delete("/childAlert").param("address", "my address2"))
+		.andExpect(status().isMethodNotAllowed());
+	}
 	
 	@Test
 	public void getChilAlertTest() throws Exception {
@@ -95,6 +107,14 @@ public class AlertControllerIT {
 					.andDo(print())
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$[0].lastName", is("titi")));
+	}
+	
+	@Test
+	public void getChilAlertNotFoundTest() throws Exception {
+			
+		mockMvc.perform(get("/childAlert").param("address", "my address not exist"))
+					.andDo(print())
+					.andExpect(status().isNotFound());
 	}
 	
 	@Test
@@ -109,12 +129,29 @@ public class AlertControllerIT {
 	}
 	
 	@Test
+	public void getPersonCoveredByFireStationNotFoundTest() throws Exception {
+		mockMvc.perform(get("/firestation")
+				.param("stationNumber", "3"))
+				.andDo(print())
+				.andExpect(status().isNotFound());
+	}
+	
+	@Test
 	public void getPhoneAlertTest() throws Exception {
 		mockMvc.perform(get("/phoneAlert")
 				.param("stationNumber", "1"))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0]",is("0000")));
+				
+	}
+	
+	@Test
+	public void getPhoneAlertNotFoundTest() throws Exception {
+		mockMvc.perform(get("/phoneAlert")
+				.param("stationNumber", "3"))
+				.andDo(print())
+				.andExpect(status().isNotFound());
 				
 	}
 	
@@ -129,6 +166,14 @@ public class AlertControllerIT {
 	}
 	
 	@Test
+	public void getCasernNumberAndPersonsByAddressNotFoundTest() throws Exception {
+		mockMvc.perform(get("/fire")
+				.param("address", "my address not found"))
+				.andDo(print())
+				.andExpect(status().isNotFound());
+	}
+	
+	@Test
 	public void getHouseholdTest() throws Exception {
 		mockMvc.perform(get("/flood/stations")
 				.param("stations", "1,2"))
@@ -136,6 +181,14 @@ public class AlertControllerIT {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.household.['my address'][0].lastName").value("toto"))
 				.andExpect(jsonPath("$.household.['my address2'][0].lastName").value("titi"));
+	}
+	
+	@Test
+	public void getHouseholdNotFoundTest() throws Exception {
+		mockMvc.perform(get("/flood/stations")
+				.param("stations", "10,11"))
+				.andDo(print())
+				.andExpect(status().isNotFound());
 	}
 	
 	@Test
@@ -148,6 +201,14 @@ public class AlertControllerIT {
 	}
 	
 	@Test
+	public void getPersoninfoNotFoundTest() throws Exception {
+		mockMvc.perform(get("/personInfo")
+				.param("lastName", "noExist"))
+				.andDo(print())
+				.andExpect(status().isNotFound());
+	}
+	
+	@Test
 	public void getEmaiFromCityTest() throws Exception {
 		mockMvc.perform(get("/communityEmail")
 				.param("city", "city"))
@@ -155,6 +216,14 @@ public class AlertControllerIT {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0]").value("mail1@mail.com"))
 				.andExpect(jsonPath("$[1]").value("mail2@mail.com"));
+	}
+	
+	@Test
+	public void getEmaiFromCityNotFoundTest() throws Exception {
+		mockMvc.perform(get("/communityEmail")
+				.param("city", "cityNotFound"))
+				.andDo(print())
+				.andExpect(status().isNotFound());
 	}
 	
 	

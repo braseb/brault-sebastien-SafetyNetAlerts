@@ -91,6 +91,46 @@ public class MedicalRecordControllerIT {
 	}
 	
 	@Test
+	public void createMedicalRecordAlreadyExistTest() throws Exception {
+		
+		Gson gson = new Gson();
+		
+		MedicalRecord newMedicalRecord = new MedicalRecord("toto", 
+															"tata", 
+															"08/05/1983", 
+															Collections.emptyList(),
+															Collections.emptyList());
+		MedicalRecordCreateDto newMedicalRecordDto = MedicalRecordMapping.mapToMedicalRecordCreateDto(newMedicalRecord);
+		
+		String json = gson.toJson(newMedicalRecordDto);
+		mockMvc.perform(post("/medicalRecord")
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isConflict());
+	}
+	
+	@Test
+	public void createMedicalRecordNotValidTest() throws Exception {
+		
+		Gson gson = new Gson();
+		
+		MedicalRecord newMedicalRecord = new MedicalRecord("testLastName", 
+															"testFirstName", 
+															"08/05/83", 
+															Collections.emptyList(),
+															Collections.emptyList());
+		MedicalRecordCreateDto newMedicalRecordDto = MedicalRecordMapping.mapToMedicalRecordCreateDto(newMedicalRecord);
+		
+		String json = gson.toJson(newMedicalRecordDto);
+		mockMvc.perform(post("/medicalRecord")
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
 	public void updateMedicalRecordTest() throws Exception {
 		Gson gson = new Gson();
 		
@@ -112,6 +152,26 @@ public class MedicalRecordControllerIT {
 	}
 	
 	@Test
+	public void updateMedicalRecordNotFoundTest() throws Exception {
+		Gson gson = new Gson();
+		
+		MedicalRecord updateMedicalRecord = new MedicalRecord("", 
+															"", 
+															"08/05/1983", 
+															Collections.emptyList(),
+															Collections.emptyList());
+		MedicalRecordUpdateDto updateMedicalRecordDto = MedicalRecordMapping.mapToMedicalRecordUpdateDto(updateMedicalRecord);
+				
+		String json = gson.toJson(updateMedicalRecordDto);
+		
+		mockMvc.perform(put("/medicalRecord/{lastName}/{firstName}", "lastNameNotFound", "firstNameNotFound")
+					.content(json)
+					.contentType(MediaType.APPLICATION_JSON))
+					.andDo(print())
+					.andExpect(status().isNotFound());
+	}
+	
+	@Test
 	public void removeMedicalRecordTest() throws Exception {
 				
 		mockMvc.perform(delete("/medicalRecord/{lastName}/{firstName}", "toto", "tata"))
@@ -119,6 +179,16 @@ public class MedicalRecordControllerIT {
 					.andExpect(status().isNoContent());
 		
 		mockMvc.perform(delete("/medicalRecord/{lastName}/{firstName}", "toto", "tata"))
+					.andDo(print())
+					.andExpect(status().isNotFound());
+		
+		
+	}
+	
+	@Test
+	public void removeMedicalRecordNotFoundTest() throws Exception {
+				
+		mockMvc.perform(delete("/medicalRecord/{lastName}/{firstName}", "lastNameNotFound", "firstNameNotFound"))
 					.andDo(print())
 					.andExpect(status().isNotFound());
 		

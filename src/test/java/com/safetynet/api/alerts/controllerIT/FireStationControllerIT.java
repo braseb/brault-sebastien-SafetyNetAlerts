@@ -79,6 +79,38 @@ public class FireStationControllerIT {
 	}
 	
 	@Test
+	public void createFireStationAlreadyExistTest() throws Exception {
+		
+		Gson gson = new Gson();
+		
+		FireStation newFireStation = new FireStation("my address", 1);
+		FireStationCreateDto newFireStationDto = FireStationMapping.mapToFireStationCreateDto(newFireStation);
+		
+		String json = gson.toJson(newFireStationDto);
+		mockMvc.perform(post("/firestation")
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isConflict());
+	}
+	
+	@Test
+	public void createFireStationNotValidTest() throws Exception {
+		
+		Gson gson = new Gson();
+		
+		FireStation newFireStation = new FireStation("", 1);
+		FireStationCreateDto newFireStationDto = FireStationMapping.mapToFireStationCreateDto(newFireStation);
+		
+		String json = gson.toJson(newFireStationDto);
+		mockMvc.perform(post("/firestation")
+				.content(json)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
 	public void updateFireStationTest() throws Exception {
 		Gson gson = new Gson();
 		
@@ -96,6 +128,22 @@ public class FireStationControllerIT {
 	}
 	
 	@Test
+	public void updateFireStationNotFoundTest() throws Exception {
+		Gson gson = new Gson();
+		
+		FireStation updateFireStation = new FireStation("my address not found", 3);
+		FireStationUpdateDto updateFireStationDto = FireStationMapping.mapToFireStationUpdateDto(updateFireStation);
+				
+		String json = gson.toJson(updateFireStationDto);
+		
+		mockMvc.perform(put("/firestation/{address}", "my address not found")
+					.content(json)
+					.contentType(MediaType.APPLICATION_JSON))
+					.andDo(print())
+					.andExpect(status().isNotFound());
+	}
+	
+	@Test
 	public void removeFireStationByNumberTest() throws Exception {
 				
 		mockMvc.perform(delete("/firestation/station/{stationNumber}", "1"))
@@ -105,8 +153,14 @@ public class FireStationControllerIT {
 		mockMvc.perform(delete("/firestation/station/{stationNumber}", "1"))
 		.andDo(print())
 		.andExpect(status().isNotFound());
-		
-		
+	}
+	
+	@Test
+	public void removeFireStationByNumberNotFoundTest() throws Exception {
+			
+		mockMvc.perform(delete("/firestation/station/{stationNumber}", "10"))
+		.andDo(print())
+		.andExpect(status().isNotFound());
 	}
 	
 	@Test
@@ -117,6 +171,14 @@ public class FireStationControllerIT {
 					.andExpect(status().isNoContent());
 		
 		mockMvc.perform(delete("/firestation/address/{address}", "my address"))
+					.andDo(print())
+					.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void removeFireStationByAddressNotFoundTest() throws Exception {
+						
+		mockMvc.perform(delete("/firestation/address/{address}", "my address not found"))
 					.andDo(print())
 					.andExpect(status().isNotFound());
 	}
