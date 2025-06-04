@@ -22,9 +22,9 @@ import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.model.dto.HouseholdDto;
 import com.safetynet.api.alerts.model.dto.MemberHouseholdDto;
-import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithEmailDto;
+import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithAddressAndEmailDto;
 import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithPhoneDto;
-import com.safetynet.api.alerts.model.dto.PersonMiniWithPhoneDto;
+import com.safetynet.api.alerts.model.dto.PersonMiniWithAddressAndPhoneDto;
 import com.safetynet.api.alerts.service.AlertService;
 
 @WebMvcTest(controllers = AlertController.class)
@@ -50,9 +50,9 @@ public class AlertControllerTest {
 	@Test
 	public void getPersonCoveredByFireStationTest() throws Exception {
 		FirestationDto firestationDto = new FirestationDto();
-		firestationDto.setPersons(List.of(new PersonMiniWithPhoneDto("toto", "tata", "my address", "0000"),
-											new PersonMiniWithPhoneDto("toto", "children1", "my address", "0000"),
-											new PersonMiniWithPhoneDto("toto", "chldren2", "my address", "0000")));
+		firestationDto.setPersons(List.of(new PersonMiniWithAddressAndPhoneDto("toto", "tata", "my address", "0000"),
+											new PersonMiniWithAddressAndPhoneDto("toto", "children1", "my address", "0000"),
+											new PersonMiniWithAddressAndPhoneDto("toto", "chldren2", "my address", "0000")));
 		firestationDto.setNumberAdult(1);
 		firestationDto.setNumberChild(2);
 				
@@ -86,7 +86,6 @@ public class AlertControllerTest {
 		fireDto.setStationNumber(1);
 		fireDto.setPersonFullInfo(List.of(new PersonMedicalRecordWithPhoneDto("toto", 
 																		"tata", 
-																		"my address", 
 																		19, 
 																		Collections.emptyList(),
 																		Collections.emptyList(),
@@ -106,14 +105,12 @@ public class AlertControllerTest {
 		HouseholdDto houseHoldDto = new HouseholdDto();
 		houseHoldDto.setHousehold(Map.of("my address", List.of(new PersonMedicalRecordWithPhoneDto("toto",
 																							"tata",
-																							"my address",
 																							19, 
 																							Collections.emptyList(),
 																							Collections.emptyList(),
 																							"0000"),
 																new PersonMedicalRecordWithPhoneDto("titi",
 																		"tata",
-																		"my address2",
 																		21, 
 																		Collections.emptyList(),
 																		Collections.emptyList(),
@@ -131,15 +128,15 @@ public class AlertControllerTest {
 	
 	@Test
 	public void getPersoninfoTest() throws Exception {
-		List<PersonMedicalRecordWithEmailDto> personMedicalRecordWithEmailDto = 
-												List.of(new PersonMedicalRecordWithEmailDto("toto",
+		List<PersonMedicalRecordWithAddressAndEmailDto> personMedicalRecordWithEmailDto = 
+												List.of(new PersonMedicalRecordWithAddressAndEmailDto("toto",
 												"tata",
 												"my address",
 												19, 
 												Collections.emptyList(),
 												Collections.emptyList(),
 												"mail1@mail.com"),
-												new PersonMedicalRecordWithEmailDto("toto",
+												new PersonMedicalRecordWithAddressAndEmailDto("toto",
 												"titi",
 												"my address2",
 												21, 

@@ -5,8 +5,8 @@ public class PersonDto extends PersonMiniDto{
 	private Integer age;
 		
 	
-	public PersonDto(String lastName, String firstName, String address, Integer age) {
-		super(lastName,firstName,address);
+	public PersonDto(String lastName, String firstName, Integer age) {
+		super(lastName,firstName);
 		this.age = age;
 	}
 	

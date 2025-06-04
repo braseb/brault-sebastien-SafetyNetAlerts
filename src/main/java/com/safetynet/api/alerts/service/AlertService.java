@@ -18,9 +18,9 @@ import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.model.dto.HouseholdDto;
 import com.safetynet.api.alerts.model.dto.MemberHouseholdDto;
-import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithEmailDto;
+import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithAddressAndEmailDto;
 import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithPhoneDto;
-import com.safetynet.api.alerts.model.dto.PersonMiniWithPhoneDto;
+import com.safetynet.api.alerts.model.dto.PersonMiniWithAddressAndPhoneDto;
 
 
 
@@ -68,15 +68,15 @@ public class AlertService {
 	public FirestationDto getPersonCoveredByFireStation(int stationNumber){
 		List<String> addressFireStations = fireStationService.getAddressByStationNumber(stationNumber);
 		FirestationDto fireStationDto = new FirestationDto();
-		List<PersonMiniWithPhoneDto> personMiniWithPhoneDto = new ArrayList<PersonMiniWithPhoneDto>();
+		List<PersonMiniWithAddressAndPhoneDto> personMiniWithPhoneDto = new ArrayList<PersonMiniWithAddressAndPhoneDto>();
 				
 		for (String addressFireStation : addressFireStations) {
 			
 		
 			List<Person> persons = personService.getPersonByAddress(addressFireStation);
-			List<PersonMiniWithPhoneDto> personsDtoByAddress = persons.stream()
+			List<PersonMiniWithAddressAndPhoneDto> personsDtoByAddress = persons.stream()
 													.filter(p -> p.getAddress().equals(addressFireStation))
-													.map(p -> {return new PersonMiniWithPhoneDto(p.getLastName(),
+													.map(p -> {return new PersonMiniWithAddressAndPhoneDto(p.getLastName(),
 																					p.getFirstName(),
 																					p.getAddress(),
 																					p.getPhone());})
@@ -86,10 +86,10 @@ public class AlertService {
 		
 		}		
 		
-		personMiniWithPhoneDto.sort(Comparator.comparing(p -> ((PersonMiniWithPhoneDto) p).getLastName())
-									.thenComparing(p -> ((PersonMiniWithPhoneDto) p).getFirstName()));
+		personMiniWithPhoneDto.sort(Comparator.comparing(p -> ((PersonMiniWithAddressAndPhoneDto) p).getLastName())
+									.thenComparing(p -> ((PersonMiniWithAddressAndPhoneDto) p).getFirstName()));
 		//number of child and adult
-		Map<Boolean, List<PersonMiniWithPhoneDto>> part = personMiniWithPhoneDto.stream()
+		Map<Boolean, List<PersonMiniWithAddressAndPhoneDto>> part = personMiniWithPhoneDto.stream()
 				.collect(Collectors.partitioningBy(p -> {Integer age = medicalRecordService.getAge(p.getLastName(), p.getFirstName());
 														if (age == null) {
 															return false;
@@ -169,11 +169,11 @@ public class AlertService {
 							
 	}
 	
-	public List<PersonMedicalRecordWithEmailDto> getPersonMedicalRecordWithEmailByLastName(String lastName){
+	public List<PersonMedicalRecordWithAddressAndEmailDto> getPersonMedicalRecordWithEmailByLastName(String lastName){
 		List<Person> persons = personService.getPersonByLastName(lastName);
-		List<PersonMedicalRecordWithEmailDto> personMedicalRecordWithEmailDtos = persons.stream()
+		List<PersonMedicalRecordWithAddressAndEmailDto> personMedicalRecordWithEmailDtos = persons.stream()
 							.map(p -> {MedicalRecord medicalRecord = medicalRecordService.getMedicalRecordByName(p.getLastName(), p.getFirstName());
-										PersonMedicalRecordWithEmailDto personMedicalRecordWithEmailDto = new PersonMedicalRecordWithEmailDto();
+										PersonMedicalRecordWithAddressAndEmailDto personMedicalRecordWithEmailDto = new PersonMedicalRecordWithAddressAndEmailDto();
 										personMedicalRecordWithEmailDto.setLastName(p.getLastName());
 										personMedicalRecordWithEmailDto.setFirstName(p.getFirstName());
 										personMedicalRecordWithEmailDto.setAddress(p.getAddress());

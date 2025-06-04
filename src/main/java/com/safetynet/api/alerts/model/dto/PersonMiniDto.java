@@ -3,15 +3,15 @@ package com.safetynet.api.alerts.model.dto;
 public class PersonMiniDto {
 	private String lastName;
 	private String firstName;
-	private String address;
+	//private String address;
 	
 	
 	
-	public PersonMiniDto(String lastName, String firstName, String address) {
+	public PersonMiniDto(String lastName, String firstName) {
 		super();
 		this.lastName = lastName;
 		this.firstName = firstName;
-		this.address = address;
+		//this.address = address;
 	}
 	
 	public PersonMiniDto() {
@@ -35,13 +35,13 @@ public class PersonMiniDto {
 		this.firstName = firstName;
 	}
 	
-	public String getAddress() {
-		return address;
-	}
+	//public String getAddress() {
+	//	return address;
+	//}
 	
-	public void setAddress(String address) {
-		this.address = address;
-	}
+	//public void setAddress(String address) {
+	//	this.address = address;
+	//}
 	
 	
 }

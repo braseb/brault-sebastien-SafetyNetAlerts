@@ -13,7 +13,7 @@ import com.safetynet.api.alerts.model.dto.ChildAlertDto;
 import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
 import com.safetynet.api.alerts.model.dto.HouseholdDto;
-import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithEmailDto;
+import com.safetynet.api.alerts.model.dto.PersonMedicalRecordWithAddressAndEmailDto;
 import com.safetynet.api.alerts.service.AlertService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +49,6 @@ public class AlertController {
 	public ResponseEntity<List<ChildAlertDto>> getChildAlert(@RequestParam final String address){
 		
 		List<ChildAlertDto> childAlert = alertService.getChildrenByAddress(address);
-		//return alertService.getChildrenByAdress(address);
 		if (childAlert.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(childAlert);
 		}
@@ -184,13 +183,13 @@ public class AlertController {
 	    	),
 	})
 	@Operation(summary = "Get a list of person with this lastname")
-	public ResponseEntity<List<PersonMedicalRecordWithEmailDto>> getPersoninfo(@RequestParam final String  lastName) {
-		List<PersonMedicalRecordWithEmailDto> personMedicalRecordWithEmailDto = alertService.getPersonMedicalRecordWithEmailByLastName(lastName);
+	public ResponseEntity<List<PersonMedicalRecordWithAddressAndEmailDto>> getPersoninfo(@RequestParam final String  lastName) {
+		List<PersonMedicalRecordWithAddressAndEmailDto> personMedicalRecordWithEmailDto = alertService.getPersonMedicalRecordWithEmailByLastName(lastName);
 		if(personMedicalRecordWithEmailDto.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(personMedicalRecordWithEmailDto);
 		}
 		
-		return new ResponseEntity<List<PersonMedicalRecordWithEmailDto>>(personMedicalRecordWithEmailDto, HttpStatus.OK);
+		return new ResponseEntity<List<PersonMedicalRecordWithAddressAndEmailDto>>(personMedicalRecordWithEmailDto, HttpStatus.OK);
 	}
 	
 	@GetMapping("/communityEmail")

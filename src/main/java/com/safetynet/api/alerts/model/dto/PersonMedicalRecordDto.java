@@ -7,8 +7,8 @@ public class PersonMedicalRecordDto extends PersonDto {
 	List<String> medications;
 	List<String> allergies;
 	
-	public PersonMedicalRecordDto(String lastName, String firstName, String address, int age, List<String> medications, List<String> allergies) {
-		super(lastName, firstName, address, age);
+	public PersonMedicalRecordDto(String lastName, String firstName,  int age, List<String> medications, List<String> allergies) {
+		super(lastName, firstName, age);
 		this.medications = medications;
 		this.allergies = allergies;
 	}
