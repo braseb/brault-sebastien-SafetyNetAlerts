@@ -3,7 +3,7 @@
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)  
 ![Java Version](https://img.shields.io/badge/Java-21-blue)  
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.6-brightgreen)  
-[![Lines of Code](https://img.shields.io/tokei/lines/github/braseb/brault-sebastien-SafetyNetAlerts)](https://github.com/braseb/brault-sebastien-SafetyNetAlerts)  
+
 
 Une API REST permettant de centraliser et exploiter les informations d’un service d’alerte en cas d’urgence, développée avec Spring Boot 3 et Java 21. Elle gère les résidents, les casernes de pompiers et les dossiers médicaux afin de répondre rapidement à des situations critiques.
 
@@ -16,7 +16,7 @@ Ces instructions vous permettront d'obtenir une copie du projet opérationnelle 
 ### Pré-requis
 
 - Java 21
-- Maven 3.x
+- Maven 3.9.9
 - Git
 
 ### Installation
@@ -77,8 +77,6 @@ mvn surefire-report:report
 * **Brault Sébastien**  
 GitHub : [@braseb](https://github.com/braseb)
 
-Lisez la liste des [contributeurs](https://github.com/braseb/brault-sebastien-SafetyNetAlerts/contributors) pour voir qui a participé au projet.
-
 ---
 
 ## License
@@ -93,31 +91,32 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE.md](LICENSE.md) pour p
 
 | Méthode | URL | Description |
 |--------|-----|-------------|
-| `GET` | `/firestation?stationNumber=<num>` | Personnes desservies par une caserne |
-| `GET` | `/childAlert?address=<adresse>` | Enfants à une adresse + adultes |
-| `GET` | `/phoneAlert?firestation=<num>` | Numéros des résidents liés à une caserne |
+| `GET` | `/firestation?stationNumber=<station_number>` | Personnes desservies par une caserne |
+| `GET` | `/childAlert?address=<adress>` | Enfants à une adresse + adultes |
+| `GET` | `/phoneAlert?firestation=<station_number>` | Numéros des résidents liés à une caserne |
 | `GET` | `/fire?address=<adresse>` | Infos santé + caserne d’un foyer |
-| `GET` | `/flood/stations?stations=<nums>` | Infos par casernes sur plusieurs foyers |
-| `GET` | `/personInfo?lastName=<nom>` | Infos détaillées d’une personne |
-| `GET` | `/communityEmail?city=<ville>` | Emails de tous les résidents d’une ville |
+| `GET` | `/flood/stations?stations=<list of station_numbers>` | Infos par casernes sur plusieurs foyers |
+| `GET` | `/personInfo?lastName=<lastName>` | Infos détaillées d’une personne |
+| `GET` | `/communityEmail?city=<city>` | Emails de tous les résidents d’une ville |
 
 
 ### ✏️ Endpoints CRUD
 
 #### `/person`
-- `POST` : Créer une personne
-- `PUT` : Mettre à jour une personne
-- `DELETE` : Supprimer une personne
+- `POST` : `/person` : Créer une personne
+- `PUT` : `/person/{lastName}/{firstName}` : Mettre à jour une personne
+- `DELETE` : `/person/{lastName}/{firstName}` : Supprimer une personne
 
 #### `/firestation`
-- `POST` : Associer une adresse à une caserne
-- `PUT` : Mettre à jour le numéro d’une caserne
-- `DELETE` : Supprimer une association adresse ↔ caserne
+- `POST` : `/firestation` : Associer une adresse à une caserne
+- `PUT` : `/firestation/{address}` : Mettre à jour le numéro d’une caserne
+- `DELETE` : `/firestation/station/{stationNumber}` : Supprimer une caserne par son numéro
+- `DELETE` : `/firestation/address/{address}` : Supprimer une caserne par son adresse
 
 #### `/medicalRecord`
-- `POST` : Ajouter un dossier médical
-- `PUT` : Modifier un dossier médical
-- `DELETE` : Supprimer un dossier médical
+- `POST` : `/medicalRecord` : Ajouter un dossier médical
+- `PUT` : `/medicalRecord/{lastName}/{firstName}` : Modifier un dossier médical
+- `DELETE` : `/medicalRecord/{lastName}/{firstName}` : Supprimer un dossier médical
 
 ---
 
