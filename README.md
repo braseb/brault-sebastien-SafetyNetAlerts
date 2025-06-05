@@ -1,7 +1,9 @@
 # SafetyNet Alerts API
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)  
-[![forthebadge](http://forthebadge.com/images/badges/powered-by-electricity.svg)](http://forthebadge.com)
+![Java Version](https://img.shields.io/badge/Java-21-blue)  
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.6-brightgreen)  
+[![Lines of Code](https://img.shields.io/tokei/lines/github/braseb/brault-sebastien-SafetyNetAlerts)](https://github.com/braseb/brault-sebastien-SafetyNetAlerts)  
 
 Une API REST permettant de centraliser et exploiter les informations d’un service d’alerte en cas d’urgence, développée avec Spring Boot 3 et Java 21. Elle gère les résidents, les casernes de pompiers et les dossiers médicaux afin de répondre rapidement à des situations critiques.
 
@@ -40,7 +42,7 @@ Accédez ensuite à :
 
 ## Démarrage
 
-Pour lancer les tests :
+- Pour lancer les tests :
 
 ```bash
 mvn test
@@ -99,30 +101,6 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE.md](LICENSE.md) pour p
 | `GET` | `/personInfo?lastName=<nom>` | Infos détaillées d’une personne |
 | `GET` | `/communityEmail?city=<ville>` | Emails de tous les résidents d’une ville |
 
-Endpoints principaux
-🔍 Endpoints d'information
-
-    GET /firestation?stationNumber=<num>
-    Retourne la liste des personnes couvertes par la caserne numéro <num>
-    Inclut prénom, nom, adresse, téléphone, et décompte adultes/enfants.
-
-    GET /childAlert?address=<adresse>
-    Liste des enfants (≤ 18 ans) à cette adresse avec âge et autres membres du foyer.
-
-    GET /phoneAlert?firestation=<num>
-    Numéros de téléphone des résidents desservis par la caserne <num>.
-
-    GET /fire?address=<adresse>
-    Liste des habitants à cette adresse, leur numéro de caserne, téléphone, âge, antécédents médicaux.
-
-    GET /flood/stations?stations=<liste_num>
-    Liste des foyers desservis par plusieurs casernes, groupés par adresse avec infos détaillées.
-
-    GET /personInfo?lastName=<nom>
-    Informations complètes des personnes portant ce nom.
-
-    GET /communityEmail?city=<ville>
-    Adresses mail de tous les habitants de la ville.
 
 ### ✏️ Endpoints CRUD
 
