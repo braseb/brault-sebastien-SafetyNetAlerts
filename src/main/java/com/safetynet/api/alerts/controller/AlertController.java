@@ -2,6 +2,9 @@ package com.safetynet.api.alerts.controller;
 
 
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.safetynet.api.alerts.model.dto.ChildAlertDto;
 import com.safetynet.api.alerts.model.dto.FireDto;
 import com.safetynet.api.alerts.model.dto.FirestationDto;
@@ -27,6 +31,8 @@ public class AlertController {
 		
 	@Autowired
 	private AlertService alertService;
+	
+	private final Logger log = LogManager.getLogger();
 	
 	@GetMapping("/childAlert")
 	@ApiResponses({
@@ -50,10 +56,12 @@ public class AlertController {
 		
 		List<ChildAlertDto> childAlert = alertService.getChildrenByAddress(address);
 		if (childAlert.isEmpty()) {
+			log.info("NO CHILDREN FOUND /childrenAlert : {}", new Gson().toJson(childAlert));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(childAlert);
 		}
-		
+		log.info("OK /childrenAlert : {}", new Gson().toJson(childAlert));
 		return ResponseEntity.ok(childAlert);
+		
 		
 	}
 	
@@ -78,9 +86,10 @@ public class AlertController {
 	public ResponseEntity<FirestationDto> getPersonCoveredByFireStation(@RequestParam final int stationNumber){
 		FirestationDto fireStation = alertService.getPersonCoveredByFireStation(stationNumber);
 		if (fireStation.getNumberAdult() == 0 && fireStation.getNumberChild() == 0) {
+			log.info("NO PERSON FOUND /firestation : {}", new Gson().toJson(fireStation));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(fireStation);
 		}
-		
+		log.info("OK /firestation : {}", new Gson().toJson(fireStation));
 		return new ResponseEntity<FirestationDto>(fireStation, HttpStatus.OK);
 	}
 	
@@ -105,8 +114,10 @@ public class AlertController {
 	public ResponseEntity<List<String>> getPhoneAlert(@RequestParam final int stationNumber) {
 		List<String> listPhone = alertService.getPhoneAlert(stationNumber);
 		if(listPhone.isEmpty()) {
+			log.info("NO PHONE FOUND /phoneAlert : {}", new Gson().toJson(listPhone));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(listPhone);
 		}
+		log.info("OK /phoneAlert : {}", new Gson().toJson(listPhone));
 		return new ResponseEntity<List<String>>(listPhone, HttpStatus.OK);
 	}
 	
@@ -131,9 +142,10 @@ public class AlertController {
 	public ResponseEntity<FireDto> getCasernNumberAndPersonsByAddress(@RequestParam String address){
 		FireDto fireDto = alertService.getFirestationNumberAndPersonsByAddress(address);
 		if(fireDto.getPersonsInfos().isEmpty()) {
+			log.info("NO RESIDENT FOUND AT THIS ADDRESS /fire : {}", new Gson().toJson(fireDto));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(fireDto);
 		}
-		
+		log.info("OK /fire : {}", new Gson().toJson(fireDto));
 		return new ResponseEntity<FireDto>(fireDto, HttpStatus.OK);
 	}
 	
@@ -141,7 +153,7 @@ public class AlertController {
 	@ApiResponses({
 	    @ApiResponse(
 	        responseCode = "200",
-	        description = "List of all households served by the fire station. This list group person by address",
+	        description = "List of all households served by the fire station numbers. This list group person by address",
 	        content = @Content(
 	            mediaType = "application/json",
 	            schema = @Schema(implementation = HouseholdDto.class)
@@ -158,9 +170,10 @@ public class AlertController {
 	public ResponseEntity<HouseholdDto> getHousehold(@RequestParam final List<Integer>  stations) {
 		HouseholdDto houseHoldDto = alertService.getHouseholdsByStationNumbers(stations);
 		if(houseHoldDto.getHousehold().isEmpty()) {
+			log.info("NO HOUSEHOLD FOUND FOR THIS LIST OF STATION NUMBER /flood/stations : {}", new Gson().toJson(houseHoldDto));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(houseHoldDto);
 		}
-		
+		log.info("OK /flood/stations : {}", new Gson().toJson(houseHoldDto));
 		return new ResponseEntity<HouseholdDto>(houseHoldDto, HttpStatus.OK);
 	}
 	
@@ -186,9 +199,10 @@ public class AlertController {
 	public ResponseEntity<List<PersonMedicalRecordWithAddressAndEmailDto>> getPersoninfo(@RequestParam final String  lastName) {
 		List<PersonMedicalRecordWithAddressAndEmailDto> personMedicalRecordWithEmailDto = alertService.getPersonMedicalRecordWithEmailByLastName(lastName);
 		if(personMedicalRecordWithEmailDto.isEmpty()) {
+			log.info("NO PERSON FOUND  /personInfo : {}", new Gson().toJson(personMedicalRecordWithEmailDto));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(personMedicalRecordWithEmailDto);
 		}
-		
+		log.info("OK /personInfo : {}", new Gson().toJson(personMedicalRecordWithEmailDto));
 		return new ResponseEntity<List<PersonMedicalRecordWithAddressAndEmailDto>>(personMedicalRecordWithEmailDto, HttpStatus.OK);
 	}
 	
@@ -213,9 +227,10 @@ public class AlertController {
 	public ResponseEntity<List<String>> getEmaiFromCity(@RequestParam final String  city) {
 		List<String> listMail = alertService.getAllEmailByCity(city);
 		if(listMail.isEmpty()) {
+			log.info("NO EMAIL FOUND IN THIS CITY  /communityEmail : {}", new Gson().toJson(listMail));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(listMail);
 		}
-		
+		log.info("OK /communityEmail : {}", new Gson().toJson(listMail));
 		return new ResponseEntity<List<String>>(listMail, HttpStatus.OK);
 	}
 	

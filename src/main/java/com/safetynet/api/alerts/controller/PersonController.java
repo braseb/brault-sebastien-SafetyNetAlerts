@@ -2,6 +2,8 @@ package com.safetynet.api.alerts.controller;
 
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.safetynet.api.alerts.model.dto.PersonCreateDto;
 import com.safetynet.api.alerts.model.dto.PersonUpdateDto;
 import com.safetynet.api.alerts.service.PersonService;
@@ -29,7 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 public class PersonController {
 
-    
+	private final Logger log = LogManager.getLogger();
     	
 	@Autowired
 	private PersonService personService;
@@ -63,6 +66,7 @@ public class PersonController {
 	public ResponseEntity<PersonCreateDto> createPerson(@Valid @RequestBody PersonCreateDto personToCreate) {
 		
 		PersonCreateDto personCreated = personService.createPerson(personToCreate);
+		log.info("CREATED /person : {}", new Gson().toJson(personCreated));
 		return new ResponseEntity<PersonCreateDto>(personCreated, HttpStatus.CREATED);
 	}
 	
@@ -94,6 +98,7 @@ public class PersonController {
 	public ResponseEntity<PersonUpdateDto> updatePerson(@PathVariable String lastName, @PathVariable String firstName, @Valid  @RequestBody PersonUpdateDto personToUpdate) {
 		
 		PersonUpdateDto personUpdated = personService.updatePerson(lastName, firstName, personToUpdate);
+		log.info("UPDATED /person : {} {} : {}", lastName, firstName, new Gson().toJson(personUpdated));
 		return ResponseEntity.ok(personUpdated);
 		
 	}
@@ -116,6 +121,7 @@ public class PersonController {
 	@Operation(summary = "Delete a person")
 	public ResponseEntity<?> removePerson(@PathVariable String lastName, @PathVariable String firstName){
 		personService.removePerson(lastName, firstName);
+		log.info("DELETED /person : {} {}", lastName, firstName);
 		return ResponseEntity.noContent().build();
 			
 	}
